@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Users, Cart, Categories, Color, Image, Orders, Products, Reviews, conn} = require('../db') 
+const { User, Cart, Categories, Color, Image, Orders, Products, Reviews, conn} = require('../db') 
 // Importar todos los routers;
 // // Ejemplo: const authRouter = require('./auth.js');
 // const countryMiddleware = require("./Country.js");
@@ -13,7 +13,7 @@ router.post('/users',async (req,res)=>{
   const { access, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
   console.log(req.body);
   try{
-    const newUser = await Users.create({
+    const newUser = await User.create({
       access,
       userName,
       email,
