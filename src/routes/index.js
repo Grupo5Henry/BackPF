@@ -11,7 +11,7 @@ const router = Router();
 
 router.post('/users',async (req,res)=>{
   const { access, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
-  
+  console.log(req.body);
   try{
     const newUser = await Users.create({
       access,
