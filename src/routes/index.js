@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { Users, Cart, Categories, Color, Image, Orders, Products, Reviews, conn} = require('../db') 
 // Importar todos los routers;
 // // Ejemplo: const authRouter = require('./auth.js');
 // const countryMiddleware = require("./Country.js");
@@ -9,7 +10,7 @@ const router = Router();
 
 
 router.post('/users',async (req,res)=>{
-  const { access, userName, email, password, defaultShippingAddress, billingAddress, status } = req.body;
+  const { access, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
   
   try{
     const newUser = await Users.create({
@@ -19,7 +20,7 @@ router.post('/users',async (req,res)=>{
       password,
       defaultShippingAddress,
       billingAddress,
-      status
+      
 
     })  
     res.send('User created');

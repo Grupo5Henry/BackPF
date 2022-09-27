@@ -7,6 +7,7 @@ const {
   DATABASE_URL
 } = process.env;
 
+
 const sequelize = new Sequelize(DATABASE_URL, {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
@@ -37,32 +38,31 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Product, Option, Category, Review, User, Order, Cart } = sequelize.models;
+const { Product, Color, Image, Category, Review, User, Order, Cart } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
 
 
-Product.belongsToMany(Category, {through: "ProductCategory"})
-Category.belongsToMany(Product, {through: "ProductCategory"})
+Product.belongsToMany(Category, {through: "ProductCategory", timestamps: false})
+Category.belongsToMany(Product, {through: "ProductCategory", timestamps: false})
 
-Product.hasMany(Option, {
-  foreignKey: {
-    type: DataTypes.UUID,
-    allowNull: false
-  }
-})
-Option.belongsTo(Product)
+Product.hasMany(Color)
+Color.belongsTo(Product)
 
+Product.hasMany(Image)
+Image.belongsTo(Product)
+
+//Relaciones muchos a muchos avanzadas
 
 User.belongsToMany(Product, {through: Review} )
 Product.belongsToMany(User, {through: Review})
 
-User.hasMany(Order)
-Order.belongsTo(User)
+User.belongsToMany(Product, {through: Cart})
+Product.belongsToMany(User, {through: Cart})
 
-User.hasMany(Cart)
-Cart.belongsTo(User)
+User.belongsToMany(Product, {through: Order})
+Product.belongsToMany(User, {through: Order})
 
 
 
