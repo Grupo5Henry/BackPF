@@ -8,20 +8,17 @@ module.exports = (sequelize) => {
             allowNull: false,
             primaryKey: true
         },
+        orderNumber:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         shippingAddress: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
         status: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: true
-        },
-        price: {
-            type: DataTypes.VIRTUAL
-        },
-        productId: {
-            type: DataTypes.UUID,
-            allowNull: false
         },
         amount: {
             type: DataTypes.INTEGER,

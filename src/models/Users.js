@@ -8,21 +8,21 @@ module.exports = (sequelize) => {
             allowNull: false,
             primaryKey: true
         },
-        access: {
+        role: {
             type: DataTypes.STRING,
             defaultValue: "User",
             allowNull: false
         },
         userName: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
         email: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
         password: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
         userName: {
@@ -30,15 +30,16 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         defaultShippingAddress: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
         billingAddress: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING,
             allowNull: false
         },
-        timeOut: {
-            type: DataTypes.DATEONLY
+        banned: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
 
     }, {
