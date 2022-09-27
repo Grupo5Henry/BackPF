@@ -9,7 +9,7 @@ router.post('/', async (req,res)=>{
     console.log(req.body);
     try{
         const newUser = await User.create({
-            access,
+            role,
             userName,
             email,
             password,
