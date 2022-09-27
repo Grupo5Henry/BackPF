@@ -5,6 +5,10 @@ const ProductRoutes = require('./ProductRoutes.js');
 const router = Router();
 
 
+router.get("/", (req, res) => {
+    res.send("Back Funcionando");
+})
+
 
 router.use('/user', UserRoutes)
 router.use('/product', ProductRoutes)
