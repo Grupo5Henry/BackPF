@@ -5,7 +5,7 @@ const router = Router();
 const axios = require("axios");
 
 router.post('/', async (req,res)=>{
-    const { access, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
+    const { role, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
     console.log(req.body);
     try{
         const newUser = await User.create({
