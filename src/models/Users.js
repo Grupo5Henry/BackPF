@@ -39,6 +39,10 @@ module.exports = (sequelize) => {
         },
         timeOut: {
             type: DataTypes.DATEONLY
+        },
+        status: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
 
     }, {
