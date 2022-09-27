@@ -25,10 +25,6 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        userName: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
         defaultShippingAddress: {
             type: DataTypes.STRING,
             allowNull: false

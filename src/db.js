@@ -44,8 +44,8 @@ const { Product, Color, Image, Category, Review, User, Order, Cart } = sequelize
 // Product.hasMany(Reviews);
 
 
-Product.belongsToMany(Category, {through: "ProductCategory"})
-Category.belongsToMany(Product, {through: "ProductCategory"})
+Product.belongsToMany(Category, {through: "ProductCategory", timestamps: false})
+Category.belongsToMany(Product, {through: "ProductCategory", timestamps: false})
 
 Product.hasMany(Color)
 Color.belongsTo(Product)
@@ -53,6 +53,7 @@ Color.belongsTo(Product)
 Product.hasMany(Image)
 Image.belongsTo(Product)
 
+//Relaciones muchos a muchos avanzadas
 
 User.belongsToMany(Product, {through: Review} )
 Product.belongsToMany(User, {through: Review})
