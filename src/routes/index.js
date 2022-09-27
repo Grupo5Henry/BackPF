@@ -13,5 +13,7 @@ const router = Router();
 // router.use('/countries', countryMiddleware);
 // router.use('/activities', activityMiddleware);
 
-
+router.get("/", (req, res) => {
+    res.send("Levantado")
+})
 module.exports = router;
