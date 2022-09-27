@@ -1,35 +1,10 @@
 const { Router } = require('express');
-const { User, Cart, Categories, Color, Image, Orders, Products, Reviews, conn} = require('../db') 
-// Importar todos los routers;
-// // Ejemplo: const authRouter = require('./auth.js');
-// const countryMiddleware = require("./Country.js");
-// const activityMiddleware = require("./Activity.js")
-
+const UserRoutes = require ('./UserRoutes');
+const ProductRoutes = require('./ProductRoutes');
 
 const router = Router();
-
-
-router.post('/users',async (req,res)=>{
-  const { access, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
-  console.log(req.body);
-  try{
-    const newUser = await User.create({
-      access,
-      userName,
-      email,
-      password,
-      defaultShippingAddress,
-      billingAddress,
-      
-
-    })  
-    res.send('User created');
-  } catch(err){
-    console.log(err);
-    res.status(500).send('User cannot be created')
-  }
-})
-
+router.use('/user', UserRoutes.js)
+router.use('/product', ProductRoutes.js)
 /* 
     RUTAS USUARIOS
     Crear Ruta para creación de Usuario  
