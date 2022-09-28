@@ -30,6 +30,10 @@ module.exports = (sequelize) => {
         price: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        hidden: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     }, {
         timestamps: false
