@@ -53,16 +53,45 @@ Color.belongsTo(Product)
 Product.hasMany(Image)
 Image.belongsTo(Product)
 
+
+
 //Relaciones muchos a muchos avanzadas
 
-User.belongsToMany(Product, {through: Review} )
-Product.belongsToMany(User, {through: Review})
+User.belongsToMany(Product, {
+  through: Review,
+  foreignKey: "userName",
+  otherKey: "productId"
+} )
+Product.belongsToMany(User, {
+  through: Review,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
 
-User.belongsToMany(Product, {through: Cart})
-Product.belongsToMany(User, {through: Cart})
 
-User.belongsToMany(Product, {through: Order})
-Product.belongsToMany(User, {through: Order})
+
+
+User.belongsToMany(Product, {
+  through: Cart,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
+Product.belongsToMany(User, {
+  through: Cart,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
+
+User.belongsToMany(Product, {
+  through: Order,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
+Product.belongsToMany(User, {
+  through: Order,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
 
 
 
