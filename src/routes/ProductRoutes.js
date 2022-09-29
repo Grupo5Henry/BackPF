@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { Op } = require("sequelize")
 const axios = require("axios");
 const { User, Cart, Category, Color, Image, Order, Product, Review, conn, ProductCategory} = require('../db'); 
-const { getApiCellphones, getApiComputers } = require("../controllers/controllersApi.js");
+const { getApiCellphones, getApiComputers } = require("../controllers/controllersApi.js")
 
 
 const router = Router();
@@ -72,18 +72,20 @@ router.put("/hide", async (req, res) => {
     }
 });
 
+router.get("/Api", async (req, res) => {
+    try {
+        await getApiCellphones();
+        await getApiComputers();
+        return res.status(200)
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+});
 
 router.get("/all", async (req, res) => {
     try {
         const products = await Product.findAll({include: Category});
-        if(products.length === 0) {
-            await getApiCellphones();
-            await getApiComputers();   
-            const products = await Product.findAll({include: Category});
-            return res.status(200).json(products)
-        } else {
-            res.send(products);
-        }
+        res.send(products)
     } catch (err) {
         res.status(500).send({error: err.message})
     }
