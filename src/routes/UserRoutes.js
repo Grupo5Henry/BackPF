@@ -24,4 +24,5 @@ router.post('/', async (req,res)=>{
     res.status(500).send('User cannot be created')
 }
 })
+
 module.exports = router;

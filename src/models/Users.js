@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
         },
         role: {
             type: DataTypes.STRING,
-            defaultValue: "User",
+            defaultValue: "user",
             allowNull: false
         },
         userName: {

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const UserRoutes = require ('./UserRoutes.js');
 const ProductRoutes = require('./ProductRoutes.js');
+const OrdersRoutes = require ('./OrdersRoutes')
 
 const router = Router();
 
@@ -12,6 +13,7 @@ router.get("/", (req, res) => {
 
 router.use('/user', UserRoutes)
 router.use('/product', ProductRoutes)
+router.use('/orders', OrdersRoutes)
 /* 
     RUTAS USUARIOS
     Crear Ruta para creación de Usuario  
