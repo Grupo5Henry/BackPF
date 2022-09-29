@@ -9,7 +9,7 @@ const router = Router();
 
 
 router.post("/create", async (req, res) => {
-    const { name, model, brand, description, thumbnail, price, categories } = req.body;
+    const { name, model, brand, description, thumbnail, price, condition, categories } = req.body;
     // console.log(req.body);   
     try {
         const newProduct = await Product.create({
@@ -18,7 +18,8 @@ router.post("/create", async (req, res) => {
             brand,
             description,
             thumbnail,
-            price     
+            price,
+            condition     
     }) 
     if (categories) {
         // console.log(1, newProduct, categories)
@@ -80,10 +81,43 @@ router.get("/all", async (req, res) => {
     }
 });
 
-router.get("/byCategory/:category", async (req, res) => {
-    const { category } = req.params;
+
+
+router.get("/itemsPerPage", async (req, res) => {
+    let { order, amount, page } = req.query;
+    if (!amount) amount = 10;
     try {
-        const products = await Product.findAll({include: {
+        const products = await Product.findAll({
+            order: [["price", order ? order : "ASC"]],
+            offSet: page * amount,
+            limit: amount,
+            include: Category});
+        res.send(products)
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+});
+
+
+
+
+router.get("/filterBy", async (req, res) => {
+    let { category, brand, model, minPrice, maxPrice, order, amount, page } = req.query;
+    if (!amount) amount = 10;
+    if (!minPrice) minPrice = 0;
+    if (!maxPrice) maxPrice = Infinity;
+    try {
+        const products = await Product.findAll({
+            order: [["price", order? order : "ASC"]],
+            offSet: page * amount,
+            limit: amount,
+            where: {
+                brand: brand,
+                model: model,
+                price: {[Op.between]: [minPrice, maxPrice]}
+
+            },
+            include: {
             model: Category,
             required: true,
             where: {

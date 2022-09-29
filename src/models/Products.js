@@ -34,6 +34,9 @@ module.exports = (sequelize) => {
         hidden: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        condition: {
+            type: DataTypes.STRING
         }
     }, {
         timestamps: false
