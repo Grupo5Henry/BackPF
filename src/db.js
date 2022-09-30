@@ -103,10 +103,21 @@ Product.belongsToMany(User, {
 
 
 User.belongsToMany(Product, {
-  through: Order
+  through: {
+    model: Order,
+    unique: false
+  },
+  foreignKey: "productId",
+  otherKey: "userName"
 })
 Product.belongsToMany(User, {
-  through: Order
+  through: {
+    model: Order,
+    unique: false
+  },
+  foreignKey: "productId",
+  otherKey: "userName"
+
 })
 
 
