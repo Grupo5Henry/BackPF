@@ -46,15 +46,15 @@ router.put('/change', async(req, res) =>{
 })
 
 router.post('/', async(req, res) =>{
-    const{ productId, userName, shippingAddress, status, amount} = req.body
+    const{ productIdOrder, userNameOrder, shippingAddress, status, amount} = req.body
     try {
-        const user = await User.findByPk(userName);
-        const product = await Product.findByPk(productId);
+        const user = await User.findByPk(userNameOrder);
+        const product = await Product.findByPk(productIdOrder);
         await user.addProduct(product, { through: { shippingAddress: shippingAddress, status: status, amount: amount } })
-        res.sed('Order added');
+        res.send(product);
     } catch (error) {
         console.log(error)
     }
 });
 
-module.exports = router;
+module.exports = router; 

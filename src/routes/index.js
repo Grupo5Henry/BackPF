@@ -2,6 +2,9 @@ const { Router } = require('express');
 const UserRoutes = require ('./UserRoutes.js');
 const ProductRoutes = require('./ProductRoutes.js');
 const OrdersRoutes = require ('./OrderRoutes')
+const CategoryRoutes = require ('./CategoryRoutes')
+const ReviewRoutes = require ('./ReviewRoutes')
+const BulkRoutes = require('./BulkRoutes')
 
 const router = Router();
 
