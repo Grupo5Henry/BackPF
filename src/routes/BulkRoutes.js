@@ -135,8 +135,8 @@ router.post("/randomReviews", async (req, res) => {
     {description: "Mejor imposible", stars: 5},
     ]
 
-    const users = await User.findAll({attributes: [userName]});
-    const products = await Product.findAll({attributes: [id]});
+    const users = await User.findAll({attributes: ["userName"]});
+    const products = await Product.findAll({attributes: ["id"]});
     try {
     
     for (let i = 0; i < 10; i++) {
