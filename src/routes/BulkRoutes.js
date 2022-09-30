@@ -144,7 +144,7 @@ router.post("/randomReviews", async (req, res) => {
         let userName = users[Math.floor(Math.random() * users.length)];
         let id = products[Math.floor(Math.random() * products.length)];
         let review = reviews[Math.floor(Math.random() * reviews.length)];
-        console.log(3)
+        console.log(3, userName, id)
         await Review.create({productId: id, userName, ...review})
         console.log(4)
     }
