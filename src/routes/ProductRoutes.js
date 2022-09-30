@@ -136,7 +136,7 @@ router.get("/filterBy", async (req, res) => {
             where: {
                 brand: {[Op.like]: `%${brand}%`},
                 model: {[Op.like]: `%${model}%`},
-                name: {[Op.like]: `%${search}%`}
+                name: {[Op.like]: `%${search}%`},
                 price: {[Op.between]: [minPrice, maxPrice]}
                 // ...(category ? {'$Category.name$': category} : {})
             },
