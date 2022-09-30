@@ -96,9 +96,10 @@ User.belongsToMany(Product, {
 Product.belongsToMany(User, {
   through: Cart,
   foreignKey: "productId",
-
   otherKey: "userName"  
 })
+Product.belongsTo(Cart)
+Cart.hasMany(Product)
 
 
 
