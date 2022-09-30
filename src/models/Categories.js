@@ -4,7 +4,8 @@ module.exports = (sequelize) => {
     sequelize.define("category", {
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            primaryKey: true
         },
         icon: {
             type: DataTypes.STRING,
