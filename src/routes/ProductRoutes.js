@@ -83,7 +83,7 @@ router.get("/all", async (req, res) => {
     const { admin } = req.body;
     try {
         const products = await Product.findAll({
-            ...(!admin ? {
+            ...(admin ? {
                 include: [{
                     model: Category,
                     through: { attributes: [] }
