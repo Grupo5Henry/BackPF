@@ -74,7 +74,15 @@ router.put("/hide", async (req, res) => {
 
 router.get("/all", async (req, res) => {
     try {
-        const products = await Product.findAll({include: Category});
+        const products = await Product.findAll({include: [{
+            model: Category,
+            through: { attributes: [] }
+        },
+        {
+            model: User,
+            through: { attributes: [] }
+        }
+    ]});
         res.send(products)
     } catch (err) {
         res.status(500).send({error: err.message})
@@ -82,6 +90,7 @@ router.get("/all", async (req, res) => {
 });
 
 
+//Ruta a ser usada para el tema de paginado (sin filtros pero permite ordenar por precio ASC y DESC)
 
 router.get("/itemsPerPage", async (req, res) => {
     let { order, amount, page } = req.query;
@@ -89,9 +98,17 @@ router.get("/itemsPerPage", async (req, res) => {
     try {
         const products = await Product.findAll({
             order: [["price", order ? order : "ASC"]],
-            offSet: page * amount,
+            offset: page * amount,
             limit: amount,
-            include: Category});
+            include: [{
+                model: Category,
+                through: { attributes: [] }
+            },
+            {
+                model: User,
+                through: { attributes: [] }
+            }
+        ]});
         res.send(products)
     } catch (err) {
         res.status(500).send({error: err.message})
@@ -100,31 +117,37 @@ router.get("/itemsPerPage", async (req, res) => {
 
 
 
+//Ruta para filtrar (y ordenar por precio ASC y DESC)
 
 router.get("/filterBy", async (req, res) => {
     let { category, brand, model, minPrice, maxPrice, order, amount, page } = req.query;
+    if (!page) page = 0; 
     if (!amount) amount = 10;
+    if (!brand) brand = "";
+    if (!model) model = "";
     if (!minPrice) minPrice = 0;
-    if (!maxPrice) maxPrice = Infinity;
+    if (!maxPrice) maxPrice = 100000000000;
     try {
         const products = await Product.findAll({
             order: [["price", order? order : "ASC"]],
-            offSet: page * amount,
-            limit: amount,
-            where: {
-                brand: brand,
-                model: model,
-                price: {[Op.between]: [minPrice, maxPrice]}
+            offset: page * amount,
+            limit: amount, 
 
-            },
-            include: {
-            model: Category,
-            required: true,
             where: {
-                name: category
+                brand: {[Op.like]: `%${brand}%`},
+                model: {[Op.like]: `%${model}%`},
+                price: {[Op.between]: [minPrice, maxPrice]}
+                // ...(category ? {'$Category.name$': category} : {})
             },
-            through: { attributes: []}
-        }});
+            ...(category ? 
+                {include: {
+                    // where: (category ? {name : category} : {}),
+                    model: Category,
+                    through: { attributes: [] },
+                    where : {name: category}
+                }} : {}
+                )
+        });
         res.send(products);
     } catch (err) {
         res.status(500).send({error: err.message})
