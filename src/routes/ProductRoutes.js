@@ -80,8 +80,14 @@ router.get("/Api", async (req, res) => {
 });
 
 router.get("/all", async (req, res) => {
+    const { admin } = req.body;
+    let hidden = false
+    if (!admin) hidden = true
     try {
-        const products = await Product.findAll({include: [{
+        const products = await Product.findAll({
+            attributes: ["name"],
+            where: {hidden: hidden},
+            include: [{
             model: Category,
             through: { attributes: [] }
         },
@@ -104,6 +110,7 @@ router.get("/itemsPerPage", async (req, res) => {
     if (!amount) amount = 10;
     try {
         const products = await Product.findAll({
+            where: {hidden: false},
             order: [["price", order ? order : "ASC"]],
             offset: page * amount,
             limit: amount,
@@ -141,6 +148,7 @@ router.get("/filterBy", async (req, res) => {
             offset: page * amount,
             limit: amount, 
             where: {
+                hidden: false,
                 brand: {[Op.like]: `%${brand}%`},
                 model: {[Op.like]: `%${model}%`},
                 name: {[Op.like]: `%${search}%`},
