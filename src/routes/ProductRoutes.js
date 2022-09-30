@@ -83,16 +83,16 @@ router.get("/all", async (req, res) => {
     const { admin } = req.body;
     try {
         const products = await Product.findAll({
-            ...(admin ? { where: {hidden: false}} : {}),
-            attributes: ["name"],
-            include: [{
-            model: Category,
-            through: { attributes: [] }
-        },
-        {
-            model: User
-        }
-    ]});
+            ...(!admin ? {
+                include: [{
+                    model: Category,
+                    through: { attributes: [] }
+                }
+            ]
+            } : {
+                attributes: ["name"],
+                where: {hidden: false}
+            })});
         res.send(products)
     } catch (err) {
         res.status(500).send({error: err.message})
