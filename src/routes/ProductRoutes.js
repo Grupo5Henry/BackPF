@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { Op } = require("sequelize")
 const axios = require("axios");
 const { User, Cart, Category, Color, Image, Order, Product, Review, conn, ProductCategory} = require('../db'); 
+const { getApiCellphones, getApiComputers } = require("../controllers/controllersApi.js")
 
 
 const router = Router();
@@ -19,16 +20,16 @@ router.post("/create", async (req, res) => {
             description,
             thumbnail,
             price,
-            condition         
-        }) 
-        if (categories.length /* Si el arreglo tiene algo */) {
-        // categories va a ser un array con categorias. En el front va a haber un select con
-        // las categorias y se van a ir agregando al arreglo. Si me llegara a faltar una categoria,
-        // para eso esta la ruta de categorias.
-    
-           await newProduct.setCategories(categories)
-        } 
-        res.send(newProduct);
+            condition     
+    }) 
+    if (categories.length /* Si el arreglo tiene algo */) {
+    // categories va a ser un array con categorias. En el front va a haber un select con
+    // las categorias y se van a ir agregando al arreglo. Si me llegara a faltar una categoria,
+    // para eso esta la ruta de categorias.
+
+       await newProduct.setCategories(categories)
+    } 
+    res.send(newProduct);
 } catch (err) {
     // console.log(err);   
     res.status(500).send({error: err.message})
@@ -68,6 +69,15 @@ router.put("/hide", async (req, res) => {
     }
 });
 
+router.get("/Api", async (req, res) => {
+    try {
+        await getApiCellphones();
+        await getApiComputers();
+        return res.status(200)
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+});
 
 router.get("/all", async (req, res) => {
     try {
@@ -155,7 +165,7 @@ router.get("/filterBy", async (req, res) => {
 router.get("/ID/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await Product.findByPk(id, {include: {model: Category, through: { attributes: []}}})
+        const product = await conn.models.Product.findByPk(id, {include: {model: Category, through: { attributes: []}}})
         res.send(product)
     } catch (err) {
         res.status(500).send({error: err.message})
