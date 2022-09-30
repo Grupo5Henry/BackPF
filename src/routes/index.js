@@ -5,7 +5,7 @@ const CategoryRoutes = require("./CategoryRoutes.js");
 const ReviewRoutes = require("./ReviewRoutes.js");
 const BulkRoutes = require("./BulkRoutes.js");
 const FavoriteRoutes = require("./FavoriteRoutes.js");
-const OrdersRoutes = require ('./OrderRoutes')
+const OrderRoutes = require ('./OrderRoutes')
 
 
 const router = Router();
@@ -21,7 +21,7 @@ router.use('/category', CategoryRoutes)
 router.use('/review', ReviewRoutes)
 router.use('/bulk', BulkRoutes)
 router.use('/favorite', FavoriteRoutes)
-router.use('/orders', OrdersRoutes)
+router.use('/order', OrderRoutes)
 
 
 
