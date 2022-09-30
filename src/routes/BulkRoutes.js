@@ -114,3 +114,43 @@ router.post("/reviews", async (req, res) => {
         res.status(500).send({error: err.message})
     }
 });
+
+
+
+
+
+
+router.post("/randomReviews", async (req, res) => {
+    const reviews = [{description: "Pesimo", stars: 1},
+    {description: "Un desastre", stars: 1},
+    {description: "Empezo a dar problemas al poco tiempo", stars: 2},
+    {description: "Mas lento de lo esperado", stars: 2},
+    {description: "Cumple", stars: 3},
+    {description: "Precio/calidad lo vale", stars: 3},
+    {description: "No la recomendaria pero tampoco es tan mala", stars: 3},
+    {description: "Tiene algun que otro tema pero funciona bien", stars: 4},
+    {description: "Muy buena", stars: 4},
+    {description: "A mi hija le sirvio", stars: 4},
+    {description: "Excelente", stars: 5},
+    {description: "Mejor imposible", stars: 5},
+    ]
+
+    const users = await User.findAll({attributes: [userName]});
+    const products = await Product.findAll({attributes: [id]});
+    try {
+    
+    for (let i = 0; i < 10; i++) {
+
+        let userName = users[Math.floor(Math.random() * users.length)];
+        let id = products[Math.floor(Math.random() * products.length)];
+        let review = reviews[Math.floor(Math.random() * reviews.length)];
+
+        await Review.create({id, userName, ...review})
+    }
+
+    res.send("Reviews agregadas")
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+
+})
