@@ -134,19 +134,42 @@ router.post("/randomReviews", async (req, res) => {
     {description: "Excelente", stars: 5},
     {description: "Mejor imposible", stars: 5},
     ]
-    console.log(0)
+    // console.log(0)
     const users = await User.findAll({attributes: ["userName"]});
     const products = await Product.findAll({attributes: ["id"]});
-    console.log(1)
+    // console.log(1)
     try {
-    console.log(2)
-    for (let i = 0; i < 10; i++) {
+    // console.log(2)
+    for (let i = 0; i < 100; i++) {
         let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
         let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
         let review = reviews[Math.floor(Math.random() * reviews.length)];
-        console.log(3, userName, id)
+        // console.log(3, userName, id)
         await Review.create({productId: id, userName: userName, ...review})
-        console.log(4)
+        // console.log(4)
+    }
+
+    res.send("Reviews agregadas")
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+
+})
+
+
+router.post("/randomFavorite", async (req, res) => {
+// console.log(0)
+    const users = await User.findAll({attributes: ["userName"]});
+    const products = await Product.findAll({attributes: ["id"]});
+    // console.log(1)
+    try {
+    // console.log(2)
+    for (let i = 0; i < 100; i++) {
+        let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
+        let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
+        // console.log(3, userName, id)
+        await Favorite.create({productId: id, userName: userName})
+        // console.log(4)
     }
 
     res.send("Reviews agregadas")
