@@ -79,8 +79,7 @@ router.get("/all", async (req, res) => {
             through: { attributes: [] }
         },
         {
-            model: User,
-            through: { attributes: [] }
+            model: User
         }
     ]});
         res.send(products)
