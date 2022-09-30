@@ -1,12 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 const {Order, User, Product} = require('../db')
-const { getOrderByDate, getAllOrders, getGroupOrders } = require('../controllers/controllersOrder');
+const { getOrderByOrderNumber, getAllOrders, getGroupOrders } = require('../controllers/controllersOrder');
 
 
-router.get('/parametro/date', async(req, res ) =>{// numero de orden
-    const {parametro} = req.body;
-    const result = await getOrderByDate(parametro);
+router.get('/byOrderNumber', async(req, res ) =>{// numero de orden
+    const { orderNumber } = req.body;
+    const result = await getOrderByOrderNumber(orderNumber);
     res.send(result);
 })
 
@@ -27,31 +27,30 @@ router.get('/', async(req, res) => {
         console.log(error)
     }
 })
+
 router.put('/change', async(req, res) =>{
-    const { parametro, newStatus } = req.body;
+    const { orderNumber , newStatus } = req.body;
     try{
         const result = await Order.findAll({
             where:{
-                orderNumber : parametro
+                orderNumber
             }
         })
         result.forEach(element => {
             element.status = newStatus;
             element.save()
         });
-        res.send('elemeto modificado')
+        res.send('Elemeto modificado')
     }catch (error){
         console.log(error)
     }
 })
 
 router.post('/', async(req, res) =>{
-    const{ productIdOrder, userNameOrder, shippingAddress, status, amount} = req.body
+    const{ productId, userName, orderNumber, shippingAddress, status, amount} = req.body
     try {
-        const user = await User.findByPk(userNameOrder);
-        const product = await Product.findByPk(productIdOrder);
-        await user.addProduct(product, { through: { shippingAddress: shippingAddress, status: status, amount: amount } })
-        res.send(product);
+        const order = await Order.create(productId, userName, orderNumber, shippingAddress, status, amount)
+        res.send(order);
     } catch (error) {
         console.log(error)
     }

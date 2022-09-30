@@ -12,7 +12,7 @@ const getGroupOrders = async() =>{
     return orders;
 }
 
-const getOrderByDate = async (parametro) =>{
+const getOrderByOrderNumber = async (parametro) =>{
     const data = await Order.findAll({
         where : {
             orderNumber : parametro
@@ -22,5 +22,5 @@ const getOrderByDate = async (parametro) =>{
 module.exports = {
     getAllOrders,
     getGroupOrders,
-    getOrderByDate,
+    getOrderByOrderNumber,
 }
