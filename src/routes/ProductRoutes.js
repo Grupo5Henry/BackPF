@@ -93,6 +93,7 @@ router.get("/all", async (req, res) => {
 
 router.get("/itemsPerPage", async (req, res) => {
     let { order, amount, page } = req.query;
+    if (!page) page = 0;
     if (!amount) amount = 10;
     try {
         const products = await Product.findAll({
