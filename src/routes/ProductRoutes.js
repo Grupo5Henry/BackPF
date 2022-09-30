@@ -22,15 +22,12 @@ router.post("/create", async (req, res) => {
             price,
             condition     
     }) 
-    if (categories) {
-        // console.log(1, newProduct, categories)
-        for (let category of categories) {
-            // console.log(2, newProduct, category)
-            let addCategory = await Category.findOrCreate({where: {name: category}})
-            // console.log(3, addCategory[0])
-            if (addCategory !== true) await newProduct.addCategory(addCategory[0])
-            // console.log(4, newProduct)
-        }
+    if (categories.length /* Si el arreglo tiene algo */) {
+    // categories va a ser un array con categorias. En el front va a haber un select con
+    // las categorias y se van a ir agregando al arreglo. Si me llegara a faltar una categoria,
+    // para eso esta la ruta de categorias.
+
+       await newProduct.setCategories(categories)
     } 
     res.send(newProduct);
 } catch (err) {
@@ -144,7 +141,7 @@ router.get("/filterBy", async (req, res) => {
 router.get("/ID/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await Product.findByPk(id, {include: {model: Category, through: { attributes: []}}})
+        const product = await conn.models.Product.findByPk(id, {include: {model: Category, through: { attributes: []}}})
         res.send(product)
     } catch (err) {
         res.status(500).send({error: err.message})
