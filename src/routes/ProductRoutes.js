@@ -81,12 +81,10 @@ router.get("/Api", async (req, res) => {
 
 router.get("/all", async (req, res) => {
     const { admin } = req.body;
-    let hidden = false
-    if (admin) hidden = true
     try {
         const products = await Product.findAll({
+            ...(admin ? { where: {hidden: false}} : {}),
             attributes: ["name"],
-            where: {hidden: hidden},
             include: [{
             model: Category,
             through: { attributes: [] }
