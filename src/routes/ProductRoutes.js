@@ -19,19 +19,16 @@ router.post("/create", async (req, res) => {
             description,
             thumbnail,
             price,
-            condition     
-    }) 
-    if (categories) {
-        // console.log(1, newProduct, categories)
-        for (let category of categories) {
-            // console.log(2, newProduct, category)
-            let addCategory = await Category.findOrCreate({where: {name: category}})
-            // console.log(3, addCategory[0])
-            if (addCategory !== true) await newProduct.addCategory(addCategory[0])
-            // console.log(4, newProduct)
-        }
-    } 
-    res.send(newProduct);
+            condition         
+        }) 
+        if (categories.length /* Si el arreglo tiene algo */) {
+        // categories va a ser un array con categorias. En el front va a haber un select con
+        // las categorias y se van a ir agregando al arreglo. Si me llegara a faltar una categoria,
+        // para eso esta la ruta de categorias.
+    
+           await newProduct.setCategories(categories)
+        } 
+        res.send(newProduct);
 } catch (err) {
     // console.log(err);   
     res.status(500).send({error: err.message})
@@ -90,7 +87,7 @@ router.get("/all", async (req, res) => {
 
 
 //Ruta a ser usada para el tema de paginado (sin filtros pero permite ordenar por precio ASC y DESC)
-
+// ASC DESC // amount es la cantidad de productos que queres que te pase // page en que pagina estas
 router.get("/itemsPerPage", async (req, res) => {
     let { order, amount, page } = req.query;
     if (!page) page = 0;
@@ -133,7 +130,6 @@ router.get("/filterBy", async (req, res) => {
             order: [["price", order? order : "ASC"]],
             offset: page * amount,
             limit: amount, 
-
             where: {
                 brand: {[Op.like]: `%${brand}%`},
                 model: {[Op.like]: `%${model}%`},
