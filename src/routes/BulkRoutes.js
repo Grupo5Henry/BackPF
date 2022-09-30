@@ -145,7 +145,7 @@ router.post("/randomReviews", async (req, res) => {
         let id = products[Math.floor(Math.random() * products.length)];
         let review = reviews[Math.floor(Math.random() * reviews.length)];
 
-        await Review.create({id, userName, ...review})
+        await Review.create({productId: id, userName, ...review})
     }
 
     res.send("Reviews agregadas")
