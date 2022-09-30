@@ -47,10 +47,10 @@ router.put('/change', async(req, res) =>{
 })
 
 router.post('/', async(req, res) =>{
-    const{ productId, userName, orderNumber, shippingAddress, status, amount} = req.body
+    const{ productId, userUserName, orderNumber, shippingAddress, status, amount} = req.body
     console.log(req.body)
     try {
-        const order = await Order.create({productId, userName, orderNumber, shippingAddress, status, amount})
+        const order = await Order.create({productId, userUserName, orderNumber, shippingAddress, status, amount})
         res.send(order);
     } catch (error) {
         console.log(error)

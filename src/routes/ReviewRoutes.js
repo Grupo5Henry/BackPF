@@ -8,9 +8,9 @@ module.exports = router;
 
 
 router.post("/add", async (req, res) => {
-    const { productId, userUserName, description, stars } = req.body;
+    const { productId, userName, description, stars } = req.body;
     try {
-        const review = await Review.create({productId, userUserName, description, stars})
+        const review = await Review.create({productId, userName, description, stars})
         res.send(review)
     } catch (err) {
         res.status(500).send({error: err.message})
@@ -39,13 +39,13 @@ router.get("/all", async (req, res) => {
 
 
 router.put("/modify", async (req, res) => {
-    const { productId, userUserName, description, stars } = req.body;
+    const { productId, userName, description, stars } = req.body;
     // console.log(req.body)
     try { 
         Review.update(
-            { userUserName, productId, description, stars},
+            { userName, productId, description, stars},
             {
-                where: {productId: productId, userUserName: userUserName}
+                where: {productId: productId, userName: userName}
             }
         )
         return res.send("Review modificada");
@@ -56,9 +56,9 @@ router.put("/modify", async (req, res) => {
 
 
 router.put("/hideReview", async (req, res) => {
-    const { productId, userUserName } = req.body;
+    const { productId, userName } = req.body;
     try {
-        const review = await Review.findOne({where: { productId: productId, userUserName: userUserName}});
+        const review = await Review.findOne({where: { productId: productId, userName: userName}});
         review.update({hidden: true});
         await review.save();
         res.send("Review hidden");
