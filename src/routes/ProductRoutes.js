@@ -100,6 +100,24 @@ router.get("/all", async (req, res) => {
 });
 
 
+router.get("/allBrandOrModel", async (req, res) => {
+    const { brand } = req.query;
+    try {
+        const products = await Product.findAll({
+            ...(brand ? {
+                attributes: ["brand"],
+                where: {hidden: false}
+            } : {
+                attributes: ["model"],
+                where: {hidden: false}
+            })});
+        res.send(products)
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+});
+
+
 //Ruta a ser usada para el tema de paginado (sin filtros pero permite ordenar por precio ASC y DESC)
 // ASC DESC // amount es la cantidad de productos que queres que te pase // page en que pagina estas
 router.get("/itemsPerPage", async (req, res) => {
