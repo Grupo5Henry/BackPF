@@ -7,7 +7,7 @@ module.exports = router;
 
 
 router.get("/", async (req, res) => {
-    const { userName } = req.body;
+    const { userName } = req.query;
     if (!userName) return res.send("Missing Username")
     try {
         const favorites = await Favorite.findAll({where: {userName}, include: Product})
