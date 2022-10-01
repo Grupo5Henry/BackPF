@@ -103,12 +103,17 @@ router.get("/all", async (req, res) => {
 router.get("/allBrandAndModel", async (req, res) => {
 
     try {
-        const products = await Product.findAll({
-            
-            attributes: ["brand", "model"],
+        const brands = await Product.findAll({
+            attributes: ["brand"],
+            group: ["brand"],
             where: {hidden: false}
         });
-        res.send(products)
+        const models = await Product.findAll({
+            attributes: ["model"],
+            group: ["model"],
+            where: {hidden: false}
+        })
+        res.send({brands, models})
     } catch (err) {
         res.status(500).send({error: err.message})
     }
