@@ -159,7 +159,7 @@ router.get("/filterBy", async (req, res) => {
     if (!model) model = "";
     if (!search) search = "";
     if (!minPrice) minPrice = 0;
-    if (!maxPrice) maxPrice = 100000000000;
+    if (!maxPrice) maxPrice = 2147483647; // Max integer value
     try {
         const products = await Product.findAll({
             order: [["price", order? order : "ASC"]],
