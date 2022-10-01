@@ -154,7 +154,7 @@ router.get("/itemsPerPage", async (req, res) => {
 
 router.get("/filterBy", async (req, res) => {
     let { category, brand, model, minPrice, maxPrice, search, order, amount, page } = req.query;
-    console.log(req.query)
+    // console.log(req.query)
     if (!page) page = 0; 
     if (!amount) amount = 10;
     if (!brand) brand = "";
@@ -169,8 +169,8 @@ router.get("/filterBy", async (req, res) => {
             limit: amount, 
             where: {
                 hidden: false,
-                brand: {[Op.like]: `%${brand}%`},
-                model: {[Op.like]: `%${model}%`},
+                brand: {[Op.iLike]: `%${brand}%`},
+                model: {[Op.iLike]: `%${model}%`},
                 name: {[Op.iLike]: `%${search}%`},
                 price: {[Op.between]: [minPrice, maxPrice]}
                 // ...(category ? {'$Category.name$': category} : {})
@@ -180,7 +180,7 @@ router.get("/filterBy", async (req, res) => {
                     // where: (category ? {name : category} : {}),
                     model: Category,
                     through: { attributes: [] },
-                    where : {name: category}
+                    where : {name: {[Op.iLike]: category}}
                 }} : {}
                 )
         });
