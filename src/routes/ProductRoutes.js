@@ -100,17 +100,14 @@ router.get("/all", async (req, res) => {
 });
 
 
-router.get("/allBrandOrModel", async (req, res) => {
-    const { brand } = req.query;
+router.get("/allBrandAndModel", async (req, res) => {
+
     try {
         const products = await Product.findAll({
-            ...(brand ? {
-                attributes: ["brand"],
-                where: {hidden: false}
-            } : {
-                attributes: ["model"],
-                where: {hidden: false}
-            })});
+            
+            attributes: ["brand", "model"],
+            where: {hidden: false}
+        });
         res.send(products)
     } catch (err) {
         res.status(500).send({error: err.message})
