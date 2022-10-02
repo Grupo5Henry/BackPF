@@ -4,8 +4,7 @@ module.exports = (sequelize) => {
     sequelize.define("user", {
         role: {
             type: DataTypes.STRING,
-            defaultValue: "user",
-            allowNull: false
+            defaultValue: "user"
         },
         userName: {
             type: DataTypes.STRING,

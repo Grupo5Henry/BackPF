@@ -127,7 +127,7 @@ router.get("/itemsPerPage", async (req, res) => {
     if (!page) page = 0;
     if (!amount) amount = 10;
     try {
-        const products = await Product.findAll({
+        const products = await Product.findAndCountAll({
             where: {hidden: false},
             order: [["price", order ? order : "ASC"]],
             offset: page * amount,
