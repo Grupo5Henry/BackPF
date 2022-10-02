@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 
 router.post('/signup', async (req,res)=>{
     const { userName, password, email, defaultShippingAddress, billingAddress, role } = req.body;
+    try { 
     const user = await User.findOne({
     where: {
         userName: userName 
@@ -53,7 +54,10 @@ router.post('/signup', async (req,res)=>{
     res.json({
         accessToken,
     });
-})
+
+} catch (err) {
+    res.send({error: err.message})
+}})
 
 router.post("/login", async (req, res) => {
     const { userName, password } = req.body;
@@ -63,6 +67,7 @@ router.post("/login", async (req, res) => {
     return user.email === email;
     }); */
 
+    try {
     const user = await User.findOne({
     where: {
         userName
@@ -107,6 +112,9 @@ router.post("/login", async (req, res) => {
     res.json({
     accessToken,
     });
+} catch (err) {
+    res.send({error: err.message})
+}
 });
 
 router.get('/', async (req,res)=>{
