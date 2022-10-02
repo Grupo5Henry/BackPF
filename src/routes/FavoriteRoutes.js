@@ -29,6 +29,7 @@ router.post("/add", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
     const { userName, productId } = req.body;
+    console.log(req.body)
     try {
         console.log(1, userName, productId, "Route Favorite/delete")
         const favorite = await Favorite.findOne({where: {userName, productId}});
