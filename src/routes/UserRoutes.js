@@ -47,7 +47,7 @@ router.post('/signup', async (req,res)=>{
         { userName },
         'ACCESS_TOKEN_SECRET', 
         {
-        expiresIn: "600s",
+        expiresIn: "3600s",
         }
     );
 
@@ -105,7 +105,7 @@ router.post("/login", async (req, res) => {
     { userName },
     'ACCESS_TOKEN_SECRET',
     {
-        expiresIn: "600s",
+        expiresIn: "3600s",
     }
     );
 
