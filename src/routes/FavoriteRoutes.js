@@ -30,7 +30,7 @@ router.post("/add", async (req, res) => {
 router.delete("/delete", async (req, res) => {
     const { userName, productId } = req.body;
     try {
-        const favorite = await Favorite.findOne({userName, productId});
+        const favorite = await Favorite.findAll({userName, productId});
         favorite.destroy()
         res.send("Eliminated")
     } catch (err) {
