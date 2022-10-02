@@ -19,7 +19,11 @@ router.post("/users", async (req, res) => {
 
     try {
         // console.log(users)
-        await User.bulkCreate(users)
+        for (let user of users) {
+            await axios.post("https://backpf-production.up.railway.app/user/signup",
+            {user}
+            )
+        }
         res.send("Users created")
     } catch (err) {
         res.status(500).send({error: err.message})
