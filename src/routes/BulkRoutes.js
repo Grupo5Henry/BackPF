@@ -20,8 +20,10 @@ router.post("/users", async (req, res) => {
     try {
         // console.log(users)
         for (let user of users) {
+            const { userName, password, email, defaultShippingAddress, billingAddress, role } = user;
+
             await axios.post("https://backpf-production.up.railway.app/user/signup",
-            {user}
+            { userName, password, email, defaultShippingAddress, billingAddress, role }
             )
         }
         res.send("Users created")
