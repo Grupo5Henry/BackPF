@@ -1,12 +1,14 @@
 const { Router } = require('express');
 const UserRoutes = require ('./UserRoutes.js');
 const ProductRoutes = require('./ProductRoutes.js');
+const TokenCheck = require('./TokenCheck');
 const CategoryRoutes = require("./CategoryRoutes.js");
 const ReviewRoutes = require("./ReviewRoutes.js");
 const BulkRoutes = require("./BulkRoutes.js");
 const FavoriteRoutes = require("./FavoriteRoutes.js");
 const OrderRoutes = require ('./OrderRoutes')
 const CartRoutes = require ('./CartRoutes')
+
 
 
 const router = Router();
@@ -21,10 +23,10 @@ router.use('/product', ProductRoutes)
 router.use('/category', CategoryRoutes)
 router.use('/review', ReviewRoutes)
 router.use('/bulk', BulkRoutes)
+router.use('/token', TokenCheck)
 router.use('/favorite', FavoriteRoutes)
 router.use('/order', OrderRoutes)
 router.use('/cart', CartRoutes)
-
 
 
 
