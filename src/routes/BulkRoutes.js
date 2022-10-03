@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { Op } = require("sequelize")
 const axios = require("axios");
-const { User, Cart, Category, Color, Image, Order, Product, Review, conn, ProductCategory} = require('../db'); 
+const { User, Cart, Category, Color, Image, Order, Product, Review, conn, ProductCategory, Favorite} = require('../db'); 
 const router = Router();
 module.exports = router;
 
@@ -19,7 +19,13 @@ router.post("/users", async (req, res) => {
 
     try {
         // console.log(users)
-        await User.bulkCreate(users)
+        for (let user of users) {
+            const { userName, password, email, defaultShippingAddress, billingAddress, role } = user;
+
+            await axios.post("https://backpf-production.up.railway.app/user/signup",
+            { userName, password, email, defaultShippingAddress, billingAddress, role }
+            )
+        }
         res.send("Users created")
     } catch (err) {
         res.status(500).send({error: err.message})
@@ -37,33 +43,35 @@ router.post("/users", async (req, res) => {
 
 router.post("/products", async (req, res) => {
     const { products } = req.body;
-
     try {
+        // console.log(products, 99)
         for (let product of products) {
             const { name, model, brand, description, thumbnail, price, condition, categories } = product;
-            const newProduct = await Product.findOrCreate({where: {
-
-                name,
-                model,
-                brand,
-                description,
-                thumbnail,
-
-                price,
-                condition     
-            }
-
-            }) 
+            // console.log(product, name, model, brand, description, thumbnail, price, condition, categories, 10)
+            try {
+                const newProduct = await Product.create({
+                    name,
+                    model,
+                    brand,
+                    description,
+                    thumbnail,
+                    price,
+                    condition     
+                }) 
             if (categories) {
+                // console.log(categories)
                 for (let category of categories) {
+                    // console.log(category)
                     let addCategory = await Category.findOrCreate({where: {name: category}})
-
-                    //console.log(2, newProduct[0])
+                    // console.log(2, newProduct[0])
                     // console.log(3, addCategory[0])
-                    if (addCategory !== true) await newProduct[0].addCategory(addCategory[0])
-
+                    if (addCategory !== true) await newProduct.addCategory(addCategory[0]) 
                 }
-        }}
+            }} catch (err) {
+                // console.log({error: err.message})
+                continue
+            }
+        }
         res.send("Products created")
     } catch (err) {
         //console.log(err.message)
@@ -117,3 +125,75 @@ router.post("/reviews", async (req, res) => {
         res.status(500).send({error: err.message})
     }
 });
+
+
+
+
+
+
+router.post("/randomReviews", async (req, res) => {
+    const reviews = [{description: "Pesimo", stars: 1},
+    {description: "Un desastre", stars: 1},
+    {description: "Empezo a dar problemas al poco tiempo", stars: 2},
+    {description: "Mas lento de lo esperado", stars: 2},
+    {description: "Cumple", stars: 3},
+    {description: "Precio/calidad lo vale", stars: 3},
+    {description: "No la recomendaria pero tampoco es tan mala", stars: 3},
+    {description: "Tiene algun que otro tema pero funciona bien", stars: 4},
+    {description: "Muy buena", stars: 4},
+    {description: "A mi hija le sirvio", stars: 4},
+    {description: "Excelente", stars: 5},
+    {description: "Mejor imposible", stars: 5},
+    ]
+    // console.log(0)
+    const users = await User.findAll({attributes: ["userName"]});
+    const products = await Product.findAll({attributes: ["id"]});
+    // console.log(1)
+    try {
+    // console.log(2)
+    for (let i = 0; i < 1000; i++) {
+        let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
+        let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
+        let review = reviews[Math.floor(Math.random() * reviews.length)];
+        // console.log(3, userName, id)
+        try {
+            await Review.create({productId: id, userName: userName, ...review})
+            // console.log(4)
+        } catch (err) {
+            continue
+        }
+    }
+
+    res.send("Reviews agregadas")
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+
+})
+
+
+router.post("/randomFavorite", async (req, res) => {
+// console.log(0)
+    const users = await User.findAll({attributes: ["userName"]});
+    const products = await Product.findAll({attributes: ["id"]});
+    // console.log(1)
+    try {
+    // console.log(2)
+    for (let i = 0; i < 300; i++) {
+        let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
+        let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
+        // console.log(3, userName, id)
+        try {
+            await Favorite.create({productId: id, userName: userName})
+            // console.log(4)
+        } catch (err) {
+            continue
+        }
+    }
+
+    res.send("Reviews agregadas")
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+
+})

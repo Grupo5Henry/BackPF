@@ -1,28 +1,121 @@
 const { Router } = require('express');
 const { User } = require('../db');
-const { Op } = require("sequelize")
+const { Op, where } = require("sequelize")
 const router = Router();
+const authToken = require("./middleware/authenticateToken");
+const JWT = require("jsonwebtoken");
 const axios = require("axios");
+const bcrypt = require('bcrypt');
 
-router.post('/create', async (req,res)=>{
-    const { role, userName, email, password, defaultShippingAddress, billingAddress } = req.body;
-    // console.log(req.body);
-    try{
+
+router.post('/signup', async (req,res)=>{
+    const { userName, password, email, defaultShippingAddress, billingAddress, role } = req.body;
+    try { 
+    const user = await User.findOne({
+    where: {
+        userName: userName 
+    }
+    })
+    if (user) {
+        // 422 Unprocessable Entity: server understands the content type of the request entity
+        // 200 Ok: Gmail, Facebook, Amazon, Twitter are returning 200 for user already exists
+        return res.status(200).json({
+        errors: [
+            {
+            userName: user.email,
+            msg: "The user already exists",
+            },
+        ],
+        });
+    } 
+
+    // Hash password before saving to database
+    const salt = await bcrypt.genSalt(10);
+    console.log("salt:", salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("hashed password:", hashedPassword);
+
         const newUser = await User.create({
             role,
             userName,
             email,
-            password,
-        defaultShippingAddress,
-        billingAddress,        
+            password : hashedPassword,
+            defaultShippingAddress,
+            billingAddress,        
     })  
+    const accessToken = await JWT.sign(
+        { userName },
+        'ACCESS_TOKEN_SECRET', 
+        {
+        expiresIn: "3600s",
+        }
+    );
 
-    res.send(newUser);
-} catch(err){
-    // console.log(err);
-    res.status(500).send({error: err.message})
+    res.json({
+        accessToken,
+    });
+
+} catch (err) {
+    res.send({error: err.message})
+}})
+
+router.post("/login", async (req, res) => {
+    const { userName, password } = req.body;
+
+    // Look for user email in the database
+/*  let user = users.find((user) => {
+    return user.email === email;
+    }); */
+
+    try {
+    const user = await User.findOne({
+    where: {
+        userName
+    }
+    })
+
+
+
+    // If user not found, send error message
+    if (!user) {
+    return res.status(400).json({
+        errors: [
+        {
+            msg: "Invalid credentials",
+        },
+        ],
+    });
+    }
+
+    // Compare hased password with user password to see if they are valid
+    let isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+    return res.status(401).json({
+        errors: [
+        {
+            msg: "Email or password is invalid",
+        },
+        ],
+    });
 }
-})
+
+    // Send JWT
+    const accessToken = await JWT.sign(
+    { userName },
+    'ACCESS_TOKEN_SECRET',
+    {
+        expiresIn: "3600s",
+    }
+    );
+
+    res.json({
+    accessToken,
+    });
+} catch (err) {
+    res.send({error: err.message})
+}
+});
 
 router.get('/', async (req,res)=>{
     try{
@@ -36,10 +129,14 @@ router.get('/', async (req,res)=>{
 
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
-router.put('/modify', async(req,res)=>{
-    const { role, userName, email, password, defaultShippingAddress, billingAddress, banned } = req.body;
+router.put('/modify', authToken, async(req,res)=>{
+    let { role, userName, email, password, defaultShippingAddress, billingAddress, banned } = req.body;
+    if (password){
+        const salt = await bcrypt.genSalt(10);
+        password = await bcrypt.hash(password, salt);
+    }
     try{ 
-        User.update(
+       await User.update(
             { role, userName, email, password, defaultShippingAddress, billingAddress, banned },
             {
                 where: {userName: userName}
@@ -51,11 +148,12 @@ router.put('/modify', async(req,res)=>{
     }
 })
 
+
 router.put('/delete/:username', async(req,res)=>{
     const userName  = req.params.username;
     console.log(userName);
     try{ 
-        User.update(
+        await User.update(
             { banned:true },
             {
                 where: {userName: userName}

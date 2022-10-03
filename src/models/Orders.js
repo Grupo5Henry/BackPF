@@ -3,9 +3,8 @@ const { DataTypes } = require("sequelize")
 module.exports = (sequelize) => {
     sequelize.define("order", {
         id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            allowNull: false,
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         orderNumber:{
@@ -17,7 +16,8 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         status: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM('Pending', 'Cancelled', 'InDelivery','Delivered'),
+            defaultValue: "Pending",
             allowNull: true
         },
         amount: {
@@ -27,6 +27,6 @@ module.exports = (sequelize) => {
 
     }, {
         timestamps: false
-      })
+    })
 
 }

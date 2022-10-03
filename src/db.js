@@ -38,7 +38,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Product, Color, Image, Category, Review, User, Order, Cart } = sequelize.models;
+const { Product, Color, Image, Category, Review, User, Order, Cart, Favorite } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
@@ -55,6 +55,8 @@ Image.belongsTo(Product)
 
 
 
+
+
 //Relaciones muchos a muchos avanzadas
 
 User.belongsToMany(Product, {
@@ -67,7 +69,24 @@ Product.belongsToMany(User, {
   foreignKey: "productId",
   otherKey: "userName"
 })
+Product.hasMany(Review)
+Review.belongsTo(Product)
 
+
+
+
+Product.belongsToMany(User, {
+  through: Favorite,
+  foreignKey: "productId",
+  otherKey: "userName"
+})
+User.belongsToMany(Product, {
+  through: Favorite,
+  foreignKey: "userName",
+  otherKey: "productId"
+})
+Product.hasMany(Favorite)
+Favorite.belongsTo(Product)
 
 
 
@@ -79,18 +98,29 @@ User.belongsToMany(Product, {
 Product.belongsToMany(User, {
   through: Cart,
   foreignKey: "productId",
-  otherKey: "userName"
+  otherKey: "userName"  
 })
+Product.belongsTo(Cart)
+Cart.hasMany(Product)
+
+
 
 User.belongsToMany(Product, {
-  through: Order,
+  through: {
+    model: Order,
+    unique: false
+  },
   foreignKey: "productId",
   otherKey: "userName"
 })
 Product.belongsToMany(User, {
-  through: Order,
+  through: {
+    model: Order,
+    unique: false
+  },
   foreignKey: "productId",
   otherKey: "userName"
+
 })
 
 

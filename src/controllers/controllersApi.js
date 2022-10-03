@@ -5,16 +5,16 @@ const router = Router();
 
 //GET API PRODUCTS
 
-const getApiCellphones = async () => {
+const getApiCellphones = async (x) => {
     try {
         const apiCel = await axios.get(
-            "https://api.mercadolibre.com/sites/MLA/search?category=MLA1055"
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1055&offset=${x*50}`
         );
 
         const productsApiCel = apiCel.data.results.map((p)=>(
             {
                 name: p.title,
-                price: p.price,
+                price: Math.ceil(p.price /300),
                 thumbnail: p.thumbnail,
                 brand: p.attributes[0].value_name,
                 model: p.attributes? p.attributes.filter(a => a.id === "MODEL")[0].values[0].name : "Campo incompleto", 
@@ -27,6 +27,17 @@ const getApiCellphones = async () => {
                     categories: ["celulares"] 
             }
         ));
+        // for (let product of productsApiCel) {
+        //     try {
+        //         const { name, price, thumbnail, brand, model, description, condition, categories } = product;
+        //         await axios.post("https://backpf-production.up.railway.app/product/create",
+        //         { name, price, thumbnail, brand, model, description, condition, categories }
+        //         )
+        //     } catch (err) {
+        //         continue
+        //     }
+        // }
+
         await axios.post("https://backpf-production.up.railway.app/bulk/products", {
             "products": productsApiCel
         });
@@ -36,16 +47,16 @@ const getApiCellphones = async () => {
     }
 };
 
-const getApiComputers = async () => {
+const getApiComputers = async (x) => {
     try {
         const apiComp = await axios.get(
-            "https://api.mercadolibre.com/sites/MLA/search?category=MLA1648"
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1648&offset=${x*50}`
         );
 
         const productsApiComp = apiComp.data.results.map((p) =>(
             {
                 name: p.title,
-                price: p.price,
+                price: Math.ceil(p.price /300),
                 thumbnail: p.thumbnail,
                 brand: p.attributes[0].value_name? p.attributes[0].value_name : "Marca desconocida",
                 model: p.attributes? p.attributes.filter(a => a.id === "MODEL")[0].values[0].name : "Campo incompleto", 
@@ -56,6 +67,16 @@ const getApiComputers = async () => {
                     categories: ["computadoras"] 
             }
         ));
+        // for (let product of productsApiComp) {
+        //     try {
+        //         const { name, price, thumbnail, brand, model, description, condition, categories } = product;
+        //         await axios.post("https://backpf-production.up.railway.app/product/create",
+        //         { name, price, thumbnail, brand, model, description, condition, categories }
+        //         )
+        //     } catch (err) {
+        //         continue
+        //     }
+        // }
         await axios.post("https://backpf-production.up.railway.app/bulk/products", {
             "products": productsApiComp
         });

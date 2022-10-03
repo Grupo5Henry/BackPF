@@ -10,15 +10,8 @@ module.exports = router;
 router.post("/add", async (req, res) => {
     const { productId, userName, description, stars } = req.body;
     try {
-
-        //console.log(1, req.body)
-        const user = await User.findByPk(userName);
-        const product = await Product.findByPk(productId);
-        //console.log(2, user, product)
-        await user.addProduct(product, { through: { description: description, stars: stars } })
-        //console.log(3)
-
-        res.send("Review added")
+        const review = await Review.create({productId, userName, description, stars})
+        res.send(review)
     } catch (err) {
         res.status(500).send({error: err.message})
     }
@@ -73,7 +66,6 @@ router.put("/hideReview", async (req, res) => {
         res.status(500).send({error: err.message})
     }
 })
-
 
 
 
