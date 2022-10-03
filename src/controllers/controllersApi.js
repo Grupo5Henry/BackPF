@@ -14,7 +14,7 @@ const getApiCellphones = async (x) => {
         const productsApiCel = apiCel.data.results.map((p)=>(
             {
                 name: p.title,
-                price: p.price,
+                price: Math.ceil(p.price /300),
                 thumbnail: p.thumbnail,
                 brand: p.attributes[0].value_name,
                 model: p.attributes? p.attributes.filter(a => a.id === "MODEL")[0].values[0].name : "Campo incompleto", 
@@ -56,7 +56,7 @@ const getApiComputers = async (x) => {
         const productsApiComp = apiComp.data.results.map((p) =>(
             {
                 name: p.title,
-                price: p.price,
+                price: Math.ceil(p.price /300),
                 thumbnail: p.thumbnail,
                 brand: p.attributes[0].value_name? p.attributes[0].value_name : "Marca desconocida",
                 model: p.attributes? p.attributes.filter(a => a.id === "MODEL")[0].values[0].name : "Campo incompleto", 
