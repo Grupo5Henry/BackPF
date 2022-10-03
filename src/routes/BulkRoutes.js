@@ -151,8 +151,12 @@ router.post("/randomReviews", async (req, res) => {
         let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
         let review = reviews[Math.floor(Math.random() * reviews.length)];
         // console.log(3, userName, id)
-        await Review.create({productId: id, userName: userName, ...review})
-        // console.log(4)
+        try {
+            await Review.create({productId: id, userName: userName, ...review})
+            // console.log(4)
+        } catch (err) {
+            continue
+        }
     }
 
     res.send("Reviews agregadas")
@@ -174,8 +178,12 @@ router.post("/randomFavorite", async (req, res) => {
         let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
         let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
         // console.log(3, userName, id)
-        await Favorite.create({productId: id, userName: userName})
-        // console.log(4)
+        try {
+            await Favorite.create({productId: id, userName: userName})
+            // console.log(4)
+        } catch (err) {
+            continue
+        }
     }
 
     res.send("Reviews agregadas")
