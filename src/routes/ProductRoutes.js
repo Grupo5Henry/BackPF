@@ -193,7 +193,7 @@ router.get("/filterBy", async (req, res) => {
 router.get("/ID/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await conn.models.Product.findByPk(id, {include: {model: Category, through: { attributes: []}}})
+        const product = await Product.findByPk(id, {include: {model: [Category, Review], through: { attributes: []}}})
         res.send(product)
     } catch (err) {
         res.status(500).send({error: err.message})
