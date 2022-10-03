@@ -8,7 +8,7 @@ const router = Router();
 const getApiCellphones = async (x) => {
     try {
         const apiCel = await axios.get(
-            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1055&offset=${x}`
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1055&offset=${x*50}`
         );
 
         const productsApiCel = apiCel.data.results.map((p)=>(
@@ -50,7 +50,7 @@ const getApiCellphones = async (x) => {
 const getApiComputers = async (x) => {
     try {
         const apiComp = await axios.get(
-            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1648&offset=${x}`
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1648&offset=${x*50}`
         );
 
         const productsApiComp = apiComp.data.results.map((p) =>(
