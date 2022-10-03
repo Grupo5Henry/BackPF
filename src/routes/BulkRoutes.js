@@ -47,7 +47,7 @@ router.post("/products", async (req, res) => {
         for (let product of products) {
             const { name, model, brand, description, thumbnail, price, condition, categories } = product;
             try {
-                const newProduct = await Product.Create({where: {
+                const newProduct = await Product.create({where: {
                     name,
                     model,
                     brand,
