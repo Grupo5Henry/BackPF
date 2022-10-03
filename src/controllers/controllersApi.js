@@ -56,9 +56,19 @@ const getApiComputers = async () => {
                     categories: ["computadoras"] 
             }
         ));
-        await axios.post("https://backpf-production.up.railway.app/bulk/products", {
-            "products": productsApiComp
-        });
+        for (let product of productsApiComp) {
+            try {
+                const { name, price, thumbnail, brand, model, description, condition, categories } = product;
+                await axios.post("https://backpf-production.up.railway.app/product/create",
+                { name, price, thumbnail, brand, model, description, condition, categories }
+                )
+            } catch (err) {
+                continue
+            }
+        }
+        // await axios.post("https://backpf-production.up.railway.app/bulk/products", {
+        //     "products": productsApiComp
+        // });
         /* console.log("FINALIZADO CCOMPUTADORAS") */
     } catch (error) {
         console.error(error)
