@@ -27,9 +27,20 @@ const getApiCellphones = async () => {
                     categories: ["celulares"] 
             }
         ));
-        await axios.post("https://backpf-production.up.railway.app/bulk/products", {
-            "products": productsApiCel
-        });
+        for (let product of productsApiCel) {
+            try {
+                const { name, price, thumbnail, brand, model, description, condition, categories } = product;
+                await axios.post("https://backpf-production.up.railway.app/product/create",
+                { name, price, thumbnail, brand, model, description, condition, categories }
+                )
+            } catch (err) {
+                continue
+            }
+        }
+
+        // await axios.post("https://backpf-production.up.railway.app/bulk/products", {
+        //     "products": productsApiCel
+        // });
         /* console.log("FINALIZADO CELULARES") */
     } catch (error) {
         console.error(error)
