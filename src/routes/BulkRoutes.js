@@ -149,7 +149,7 @@ router.post("/randomReviews", async (req, res) => {
     // console.log(1)
     try {
     // console.log(2)
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
         let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
         let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
         let review = reviews[Math.floor(Math.random() * reviews.length)];
@@ -177,7 +177,7 @@ router.post("/randomFavorite", async (req, res) => {
     // console.log(1)
     try {
     // console.log(2)
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 300; i++) {
         let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
         let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
         // console.log(3, userName, id)
