@@ -5,10 +5,10 @@ const router = Router();
 
 //GET API PRODUCTS
 
-const getApiCellphones = async () => {
+const getApiCellphones = async (x) => {
     try {
         const apiCel = await axios.get(
-            "https://api.mercadolibre.com/sites/MLA/search?category=MLA1055"
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1055&offset=${x}`
         );
 
         const productsApiCel = apiCel.data.results.map((p)=>(
@@ -47,10 +47,10 @@ const getApiCellphones = async () => {
     }
 };
 
-const getApiComputers = async () => {
+const getApiComputers = async (x) => {
     try {
         const apiComp = await axios.get(
-            "https://api.mercadolibre.com/sites/MLA/search?category=MLA1648"
+            `https://api.mercadolibre.com/sites/MLA/search?category=MLA1648&offset=${x}`
         );
 
         const productsApiComp = apiComp.data.results.map((p) =>(

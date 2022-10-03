@@ -71,8 +71,10 @@ router.put("/hide", async (req, res) => {
 
 router.get("/Api", async (req, res) => {
     try {
-        await getApiCellphones();
-        await getApiComputers();
+        for (let i = 0; i < 20 ; i++) {
+            await getApiCellphones(i);
+            await getApiComputers(i);
+        }
         return res.status(200)
     } catch (err) {
         res.status(500).send({error: err.message})
