@@ -65,7 +65,7 @@ router.post("/products", async (req, res) => {
                     if (addCategory !== true) await newProduct[0].addCategory(addCategory[0]) 
                 }
             }} catch (err) {
-                condition
+                console.log({error: err.message})
             }
         }
         res.send("Products created")
