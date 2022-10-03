@@ -46,26 +46,21 @@ router.post("/products", async (req, res) => {
     try {
         for (let product of products) {
             const { name, model, brand, description, thumbnail, price, condition, categories } = product;
-            const newProduct = await Product.findOrCreate({where: {
+            const newProduct = await Product.create({
                 name,
                 model,
                 brand,
                 description,
                 thumbnail,
-
                 price,
                 condition     
-            }
-            }) 
-            if (categories) {
-                for (let category of categories) {
-                    let addCategory = await Category.findOrCreate({where: {name: category}})
-                    //console.log(2, newProduct[0])
-                    // console.log(3, addCategory[0])
-                    if (addCategory !== true) await newProduct[0].addCategory(addCategory[0])
-
-
-                }
+        }) 
+        if (categories.length /* Si el arreglo tiene algo */) {
+        // categories va a ser un array con categorias. En el front va a haber un select con
+        // las categorias y se van a ir agregando al arreglo. Si me llegara a faltar una categoria,
+        // para eso esta la ruta de categorias.
+    
+           await newProduct.setCategories(categories)
         }}
         res.send("Products created")
     } catch (err) {
