@@ -44,10 +44,10 @@ router.post("/users", async (req, res) => {
 router.post("/products", async (req, res) => {
     const { products } = req.body;
     try {
-        console.log(products, 99)
+        // console.log(products, 99)
         for (let product of products) {
             const { name, model, brand, description, thumbnail, price, condition, categories } = product;
-            console.log(product, name, model, brand, description, thumbnail, price, condition, categories, 10)
+            // console.log(product, name, model, brand, description, thumbnail, price, condition, categories, 10)
             try {
                 const newProduct = await Product.create({
                     name,
