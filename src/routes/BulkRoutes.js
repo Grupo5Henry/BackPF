@@ -59,20 +59,13 @@ router.post("/products", async (req, res) => {
                     condition     
                 }) 
             if (categories) {
-                console.log(categories)
+                // console.log(categories)
                 for (let category of categories) {
-                    console.log(category)
-                    
-                    try {
-
-                        let addCategory = await Category.findOrCreate({where: {name: category}})
-                    } catch (err) {
-                        console.log(err.message)
-                    }
-                    
-                    console.log(2, newProduct[0])
+                    // console.log(category)
+                    let addCategory = await Category.findOrCreate({where: {name: category}})
+                    // console.log(2, newProduct[0])
                     // console.log(3, addCategory[0])
-                    if (addCategory !== true) await newProduct[0].addCategory(addCategory[0]) 
+                    if (addCategory !== true) await newProduct.addCategory(addCategory[0]) 
                 }
             }} catch (err) {
                 // console.log({error: err.message})
