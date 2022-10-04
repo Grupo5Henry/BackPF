@@ -35,7 +35,7 @@ router.put("/modify", async (req, res) => {
             await Product.findOne({where: {userName, productId }}).destroy()
             return res.send("Item eliminado")
         }
-        await Product.update(
+        await Cart.update(
             { userName, productId, amount },
             {
                 where: {userName, productId}
