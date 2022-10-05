@@ -29,7 +29,9 @@ router.post("/checkout", async (req, res) => {
     const { cart } = req.body;
     console.log(cart)
     try {
-        const line_items = await cart.map( async product => {
+
+
+        const line_items = await Promise.all(cart.map( async product => {
             const price = await Product.findByPk(product.product.id).price
             return {
                 price_data: {
@@ -41,7 +43,7 @@ router.post("/checkout", async (req, res) => {
                 },
                 quantity: product.amount
             }
-        })
+        }))
         console.log(line_items, line_items.price_data)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
