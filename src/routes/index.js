@@ -50,6 +50,7 @@ router.post("/checkout", async (req, res) => {
         })
         res.json({url: session.url})
     } catch (err) {
+        console.log(err.message)
         res.status(500).send({error: err.message})
     }
 })
