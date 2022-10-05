@@ -30,7 +30,7 @@ router.post("/checkout", async (req, res) => {
     console.log(cart)
     try {
         const line_items = await cart.map( async product => {
-            const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
+            const price = await Product.findByPk(product.product.id).price
             return {
                 price_data: {
                     currency: "usd",
