@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
         const cart = await Cart.findAll({
             where: {userName}, 
             include: Product,
-             order: [Product, "price", "ASC"]
+            order: [[Product, "price", "ASC"]]
         })
         res.send(cart)
     } catch (err) {
