@@ -100,8 +100,8 @@ Product.belongsToMany(User, {
   foreignKey: "productId",
   otherKey: "userName"  
 })
-Product.belongsTo(Cart)
-Cart.hasMany(Product)
+Cart.belongsTo(Product)
+Product.hasMany(Cart)
 
 
 
