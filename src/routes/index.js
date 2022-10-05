@@ -29,22 +29,24 @@ router.post("/checkout", async (req, res) => {
     const { cart } = req.body;
     console.log(cart)
     try {
+        const line_items = cart.map( async product => {
+            const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
+            return {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: product.product.name
+                    },
+                    unit_amount: price * 100                         
+                },
+                quantity: product.amount
+            }
+        })
+        console.log(line_items)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
-            line_items: cart.map( async product => {
-                const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
-                return {
-                    price_data: {
-                        currency: "usd",
-                        product_data: {
-                            name: product.product.name
-                        },
-                        unit_amount: price * 100                         
-                    },
-                    quantity: product.amount
-                }
-            }),
+            line_items: line_items,
             success_url: `${FRONT_URL}/home`,
             cancel_url: `${FRONT_URL}/landing`
         })
