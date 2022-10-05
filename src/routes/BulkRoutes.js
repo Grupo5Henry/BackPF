@@ -4,6 +4,7 @@ const axios = require("axios");
 const { User, Cart, Category, Color, Image, Order, Product, Review, conn, ProductCategory, Favorite} = require('../db'); 
 const router = Router();
 module.exports = router;
+const { BACK_URL } = require('../constantes');
 
 
 
@@ -22,7 +23,7 @@ router.post("/users", async (req, res) => {
         for (let user of users) {
             const { userName, password, email, defaultShippingAddress, billingAddress, role } = user;
 
-            await axios.post("https://backpf-production.up.railway.app/user/signup",
+            await axios.post(`${BACK_URL}/user/signup`,
             { userName, password, email, defaultShippingAddress, billingAddress, role }
             )
         }

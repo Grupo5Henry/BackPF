@@ -2,6 +2,7 @@ const axios = require("axios");
 const { Router } = require('express');
 const { User, Cart, Categories, Color, Image, Orders, Products, Reviews, conn} = require('../db') 
 const router = Router();
+const { BACK_URL } = require ('../constantes');
 
 //GET API PRODUCTS
 
@@ -38,7 +39,7 @@ const getApiCellphones = async (x) => {
         //     }
         // }
 
-        await axios.post("https://backpf-production.up.railway.app/bulk/products", {
+        await axios.post(`${BACK_URL}/bulk/products`, {
             "products": productsApiCel
         });
         /* console.log("FINALIZADO CELULARES") */
@@ -77,7 +78,7 @@ const getApiComputers = async (x) => {
         //         continue
         //     }
         // }
-        await axios.post("https://backpf-production.up.railway.app/bulk/products", {
+        await axios.post(`${BACK_URL}/bulk/products`, {
             "products": productsApiComp
         });
         /* console.log("FINALIZADO CCOMPUTADORAS") */

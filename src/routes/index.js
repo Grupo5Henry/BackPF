@@ -6,8 +6,9 @@ const CategoryRoutes = require("./CategoryRoutes.js");
 const ReviewRoutes = require("./ReviewRoutes.js");
 const BulkRoutes = require("./BulkRoutes.js");
 const FavoriteRoutes = require("./FavoriteRoutes.js");
-const OrderRoutes = require ('./OrderRoutes')
-const CartRoutes = require ('./CartRoutes')
+const OrderRoutes = require ('./OrderRoutes');
+const CartRoutes = require ('./CartRoutes');
+const AuthRoutes = require ('./AuthRoutes');
 
 
 
@@ -27,6 +28,7 @@ router.use('/token', TokenCheck)
 router.use('/favorite', FavoriteRoutes)
 router.use('/order', OrderRoutes)
 router.use('/cart', CartRoutes)
+router.use('/auth', AuthRoutes)
 
 
 
