@@ -44,7 +44,7 @@ router.post('/signup', async (req,res)=>{
             billingAddress,        
     })  
     const accessToken = await JWT.sign(
-        { userName },
+        { userName , role},
         'ACCESS_TOKEN_SECRET', 
         {
         expiresIn: "3600s",
