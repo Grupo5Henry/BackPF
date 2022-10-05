@@ -42,7 +42,6 @@ router.post("/checkout", async (req, res) => {
                 quantity: product.amount
             }
         }))
-        console.log(line_items, line_items[0].product_data, line_items[1].product_data)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
@@ -50,6 +49,8 @@ router.post("/checkout", async (req, res) => {
             success_url: `${FRONT_URL}/home`,
             cancel_url: `${FRONT_URL}/landing`
         })
+        console.log(session)
+        console.log(session.url)
         res.json({url: session.url})
     } catch (err) {
         console.log(err.message)
