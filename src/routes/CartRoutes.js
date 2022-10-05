@@ -11,7 +11,11 @@ router.get("/", async (req, res) => {
     const { userName } = req.query;
     if (!userName) return res.send("Missing Username")
     try {
-        const cart = await Cart.findAll({where: {userName}, include: Product})
+        const cart = await Cart.findAll({
+            where: {userName}, 
+            include: Product,
+             order: [Product, "price", "ASC"]
+        })
         res.send(cart)
     } catch (err) {
         res.status(500).send({error: err.message})
