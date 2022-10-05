@@ -29,7 +29,7 @@ router.post("/checkout", async (req, res) => {
     const { cart } = req.body;
     console.log(cart)
     try {
-        const line_items = cart.map( async product => {
+        const line_items = await cart.map( async product => {
             const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
             return {
                 price_data: {
