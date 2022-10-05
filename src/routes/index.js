@@ -30,14 +30,13 @@ router.post("/checkout", async (req, res) => {
     try {
         const line_items = await Promise.all(cart.map( async product => {
             let price = await Product.findByPk(product.product.id, {attributes: ["price"]})
-            price = price.dataValues.price
             return {
                 price_data: {
                     currency: "usd",
                     product_data: {
                         name: product.product.name
                     },
-                    unit_amount: price * 100                         
+                    unit_amount: price.dataValues.price * 100                         
                 },
                 quantity: product.amount
             }
@@ -47,10 +46,8 @@ router.post("/checkout", async (req, res) => {
             mode: "payment",
             line_items: line_items,
             success_url: `${FRONT_URL}/home`,
-            cancel_url: `${FRONT_URL}/landing`
+            cancel_url: `${FRONT_URL}/cart`
         })
-        console.log(session)
-        console.log(session.url)
         res.json({url: session.url})
     } catch (err) {
         console.log(err.message)
