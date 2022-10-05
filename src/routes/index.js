@@ -45,12 +45,13 @@ router.post("/checkout", async (req, res) => {
             payment_method_types: ["card"],
             mode: "payment",
             line_items: line_items,
-            success_url: `${FRONT_URL}/home`,
+            success_url: `${FRONT_URL}/congrats`,
             cancel_url: `${FRONT_URL}/cart`
         })
+
         res.json({url: session.url})
     } catch (err) {
-        console.log(err.message)
+        // console.log(err.message)
         res.status(500).send({error: err.message})
     }
 })
