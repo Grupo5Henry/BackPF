@@ -240,7 +240,7 @@ router.post("/randomOrder", async (req, res) => {
             if (memo[userName] > 5) memo[userName] = 0 
             // console.log(3, userName, id)
             try {
-                await Cart.create({
+                await Order.create({
                     orderNumber: memo[userName],
                     productId: id, 
                     userName: userName, 
