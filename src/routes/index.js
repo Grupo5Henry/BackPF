@@ -32,7 +32,7 @@ router.post("/checkout", async (req, res) => {
             let price = await Product.findByPk(product.product.id, {attributes: ["price"]})
             console.log(price, product.product.name)
             price = price[price]
-            console.log(price, product.product.name)
+            console.log(price.data_values.price, product.product.name)
             return {
                 price_data: {
                     currency: "usd",
@@ -44,7 +44,7 @@ router.post("/checkout", async (req, res) => {
                 quantity: product.amount
             }
         }))
-        console.log(line_items, line_items[price_data])
+        console.log(line_items)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
