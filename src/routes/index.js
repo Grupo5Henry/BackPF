@@ -27,11 +27,10 @@ router.get("/", (req, res) => {
 
 router.post("/checkout", async (req, res) => {
     const { cart } = req.body;
-    console.log(cart)
     try {
         const line_items = await Promise.all(cart.map( async product => {
             const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
-
+            console.log(price)
             return {
                 price_data: {
                     currency: "usd",
