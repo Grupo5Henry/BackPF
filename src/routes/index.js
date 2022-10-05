@@ -9,14 +9,49 @@ const FavoriteRoutes = require("./FavoriteRoutes.js");
 const OrderRoutes = require ('./OrderRoutes');
 const CartRoutes = require ('./CartRoutes');
 const AuthRoutes = require ('./AuthRoutes');
+const { FRONT_URL } = require('../constantes.js');
+const { Product } = require('../db'); 
 
 
+//STRIPE
+const { STRIPE_PRIVATE_KEY }= process.env;
+const stripe = require("stripe")(STRIPE_PRIVATE_KEY)
+//STRIPE
 
 const router = Router();
 
 
 router.get("/", (req, res) => {
     res.send("Back Funcionando");
+})
+
+router.post("/checkout", async (req, res) => {
+    const { cart } = req.body;
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items: cart.map( async product => {
+
+                const price = await Product.findByPk(product.product.id, {attributes: ["price"]})
+                return {
+                    price_data: {
+                        currency: "usd",
+                        product_data: {
+                            name: product.product.name
+                        },
+                        unit_amount: price * 100                         
+                    },
+                    quantity: product.amount
+                }
+            }),
+            success_url: `${FRONT_URL}/home`,
+            cancel_url: `${FRONT_URL}/landing`
+        })
+        res.json({url: session.url})
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
 })
 
 router.use('/user', UserRoutes)
