@@ -32,7 +32,8 @@ router.put("/modify", async (req, res) => {
     const { userName, productId, amount } = req.body;
     try {
         if (amount == 0) {
-            await Cart.findOne({where: {userName, productId }}).destroy()
+            const relation = await Cart.findOne({where: {userName, productId }})
+            relation.destroy()
             return res.send("Item eliminado")
         }
         await Cart.update(
