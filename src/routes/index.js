@@ -42,7 +42,7 @@ router.post("/checkout", async (req, res) => {
                 quantity: product.amount
             }
         }))
-        console.log(line_items)
+        console.log(line_items, line_items[0].product_data, line_items[1].product_data)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
