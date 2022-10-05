@@ -198,29 +198,29 @@ router.post("/randomFavorite", async (req, res) => {
 
 
 
-router.post("/randomCart", async (req, res) => {
-    // console.log(0)
-        const users = await User.findAll({attributes: ["userName"]});
-        const products = await Product.findAll({attributes: ["id"]});
-        // console.log(1)
-        try {
-        // console.log(2)
-        for (let i = 0; i < 300; i++) {
-            let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
-            let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
-            // console.log(3, userName, id)
-            try {
-                await Cart.create({productId: id, userName: userName, amount: Math.ceil(Math.random()*5)})
-                // console.log(4)
-            } catch (err) {
-                continue
-            }
-        }
-        res.send("Productos agregados a carritos")
-        } catch (err) {
-            res.status(500).send({error: err.message})
-        }
-    })
+// router.post("/randomCart", async (req, res) => {
+//     // console.log(0)
+//         const users = await User.findAll({attributes: ["userName"]});
+//         const products = await Product.findAll({attributes: ["id"]});
+//         // console.log(1)
+//         try {
+//         // console.log(2)
+//         for (let i = 0; i < 300; i++) {
+//             let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
+//             let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
+//             // console.log(3, userName, id)
+//             try {
+//                 await Cart.create({productId: id, userName: userName, amount: Math.ceil(Math.random()*5)})
+//                 // console.log(4)
+//             } catch (err) {
+//                 continue
+//             }
+//         }
+//         res.send("Productos agregados a carritos")
+//         } catch (err) {
+//             res.status(500).send({error: err.message})
+//         }
+//     })
 
 
 
