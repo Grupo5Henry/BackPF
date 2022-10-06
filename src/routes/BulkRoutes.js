@@ -235,16 +235,16 @@ router.post("/randomOrder", async (req, res) => {
             order: [["orderNumber", "DESC"]],
             limit: 1
         })
-        console.log(orderNumber)
+        // console.log(orderNumber)
         orderNumber = orderNumber.length ? orderNumber[0].orderNumber : 0
-        console.log(orderNumber)
+        // console.log(orderNumber)
         // console.log(1)
         try {
         // console.log(2)
         for (let i = 0; i < 100; i++) {
             let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
             let shippingAddress = "Calle falsa 123"
-            for (let j = 0; j < Math.floor(Math.random() * 5); j++) {
+            for (let j = 0; j < Math.ceil(Math.random() * 5); j++) {
                 let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
                 try {
                     await Order.create({
