@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { User } = require('../db');
+const { User, conn } = require('../db');
 const { Op, where } = require("sequelize")
 const router = Router();
 const authToken = require("./middleware/authenticateToken");
@@ -123,6 +123,18 @@ router.get('/', async (req,res)=>{
         return res.send(users);
     } catch(err){
         res.status(500).send({error: err.message});
+    }
+})
+
+router.get("/userAddress",async(req,res) => {
+    try {
+        var {userName} = req.query
+        const shippingAddress = await conn.models.User.findByPk(userName,{
+            attributes: ["defaultShippingAddress"]
+        })
+        res.send(shippingAddress)
+    }catch(e){
+        res.send(e.message) 
     }
 })
 
