@@ -10,14 +10,14 @@ router.get('/byOrderNumber', async(req, res ) =>{// numero de orden
     res.send(result);
 })
 
-router.get('/group', async(req, res) =>{
-    try{
-        const result = await getGroupOrders()
-        res.send(result)
-    }catch(error){
-        console.log(error)
-    }
-});
+// router.get('/group', async(req, res) =>{
+//     try{
+//         const result = await getGroupOrders()
+//         res.send(result)
+//     }catch(error){
+//         console.log(error)
+//     }
+// });
 
 
 router.get("/largestOrderNumber", async (req, res) => {
