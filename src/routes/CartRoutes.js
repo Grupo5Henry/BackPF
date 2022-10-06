@@ -8,10 +8,14 @@ module.exports = router;
 
 
 router.get("/", async (req, res) => {
-    const { userName } = req.body;
+    const { userName } = req.query;
     if (!userName) return res.send("Missing Username")
     try {
-        const cart = await Cart.findOne({where: {userName}, include: Product})
+        const cart = await Cart.findAll({
+            where: {userName}, 
+            include: Product,
+            order: [[Product, "price", "ASC"], [Product, "name", "ASC"]]
+        })
         res.send(cart)
     } catch (err) {
         res.status(500).send({error: err.message})
@@ -31,7 +35,12 @@ router.post("/add", async (req, res) => {
 router.put("/modify", async (req, res) => {
     const { userName, productId, amount } = req.body;
     try {
-        Product.update(
+        if (amount == 0) {
+            const relation = await Cart.findOne({where: {userName, productId }})
+            relation.destroy()
+            return res.send("Item eliminado")
+        }
+        await Cart.update(
             { userName, productId, amount },
             {
                 where: {userName, productId}
