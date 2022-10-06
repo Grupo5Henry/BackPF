@@ -23,6 +23,5 @@ const getOrderByOrderNumber = async (parametro) =>{
 }
 module.exports = {
     getAllOrders,
-    getGroupOrders,
     getOrderByOrderNumber,
 }
