@@ -8,8 +8,7 @@ const getAllOrders = async() =>{
 const getGroupOrders = async() =>{
     const orders = await Order.findAll({
         group : 'orderNumber',
-        order: [["orderNumber", "ASC"]],
-        attributes: []
+        attributes: ["productId", "userName", "amount"]
     })
     return orders;
 }
