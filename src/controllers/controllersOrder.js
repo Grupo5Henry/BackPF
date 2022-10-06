@@ -1,4 +1,4 @@
-const { fn } = require("sequelize");
+const { fn, Sequelize } = require("sequelize");
 const { Col } = require("sequelize/types/utils");
 const { Order,  User } = require("../db");
 
@@ -10,7 +10,7 @@ const getAllOrders = async() =>{
 const getGroupOrders = async() =>{
     const orders = await Order.findAll({
         group : 'orderNumber',
-        attributes: ["orderNumber", fn('array_agg', col('userName'), Col('productId'),  col('amount')),]
+        attributes: ["orderNumber", fn('array_agg', Sequelize.col('userName'), Sequelize.col('productId'),  Sequelize.col('amount')),]
     })
     return orders;
 }
