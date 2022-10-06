@@ -229,30 +229,39 @@ router.post("/randomOrder", async (req, res) => {
     // console.log(0)
         const users = await User.findAll({attributes: ["userName"]});
         const products = await Product.findAll({attributes: ["id"]});
-        let memo = {};
+        let orderNumber = await Order.findAll({
+            group : 'orderNumber',
+            attributes: ["orderNumber"],
+            order: [["orderNumber", "DESC"]],
+            limit: 1
+        })
+        console.log(orderNumber)
+        orderNumber = orderNumber[0].orderNumber
+        console.log(orderNumber)
         // console.log(1)
         try {
         // console.log(2)
-        for (let i = 0; i < 1500; i++) {
+        for (let i = 0; i < 100; i++) {
             let userName = users[Math.floor(Math.random() * users.length)].dataValues.userName;
-            let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
             let shippingAddress = "Calle falsa 123"
-            memo[userName] = memo[userName] ? memo[userName] + Math.floor(Math.random*15) : 0;
-            if (memo[userName] > 35) memo[userName] = 0 
-            // console.log(3, userName, id)
-            try {
-                await Order.create({
-                    orderNumber: memo[userName],
-                    productId: id, 
-                    userName: userName, 
-                    shippingAddress: shippingAddress, 
-                    amount: Math.ceil(Math.random()*5)})
-                // console.log(4)
-            } catch (err) {
-                continue
+            for (let j = 0; j < Math.floor(Math.random() * 5); j++) {
+                let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
+                try {
+                    await Order.create({
+                        orderNumber: orderNumber,
+                        productId: id, 
+                        userName: userName, 
+                        shippingAddress: shippingAddress, 
+                        amount: Math.ceil(Math.random()*5)})
+                    // console.log(4)
+                } catch (err) {
+                    continue
+                }
+
             }
+            orderNumber++
         }
-        res.send("Favoritos agregados")
+        res.send("Ordenes agregadas")
         } catch (err) {
             res.status(500).send({error: err.message})
         }
