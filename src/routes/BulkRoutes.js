@@ -238,7 +238,7 @@ router.post("/randomOrder", async (req, res) => {
             let id = products[Math.floor(Math.random() * products.length)].dataValues.id;
             let shippingAddress = "Calle falsa 123"
             memo[userName] = memo[userName] ? memo[userName] + Math.floor(Math.random*3) : 0;
-            if (memo[userName] > 5) memo[userName] = 0 
+            if (memo[userName] > 15) memo[userName] = 0 
             // console.log(3, userName, id)
             try {
                 await Order.create({
