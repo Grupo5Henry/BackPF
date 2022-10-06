@@ -49,6 +49,7 @@ router.post("/checkout", async (req, res) => {
                 success_url: `${FRONT_URL}/congrats`,
                 cancel_url: `${FRONT_URL}/cart`  
             })
+            return res.json({url: session.url})
         } catch (err) {
             return res.status(500).send({error: err.message})
         }
