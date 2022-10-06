@@ -19,6 +19,20 @@ router.get('/group', async(req, res) =>{
     }
 });
 
+
+router.get("/largestOrderNumber", async (req, res) => {
+    try {
+        const number = await Order.findAll({
+            group : 'orderNumber',
+            attributes: ["orderNumber"],
+            order: ["orderNumber", "DESC"],
+            limit: 1
+        })
+    } catch (err) {
+        res.status(500).send({error: err.message})
+    }
+})
+
 router.get('/', async(req, res) => {
     try{
     const result = await getAllOrders()
