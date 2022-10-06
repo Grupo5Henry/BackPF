@@ -46,7 +46,7 @@ router.post("/checkout", async (req, res) => {
                 payment_method_types: ["card"],
                 mode: "payment",
                 line_items: [line_item],
-                success_url: `${FRONT_URL}/congrats`,
+                success_url: `${FRONT_URL}/detail/${productId}`,
                 cancel_url: `${FRONT_URL}/cart`  
             })
             return res.json({url: session.url})
