@@ -25,9 +25,10 @@ router.get("/largestOrderNumber", async (req, res) => {
         const number = await Order.findAll({
             group : 'orderNumber',
             attributes: ["orderNumber"],
-            order: ["orderNumber", "DESC"],
+            order: [["orderNumber", "DESC"]],
             limit: 1
         })
+        res.send(number)
     } catch (err) {
         res.status(500).send({error: err.message})
     }
