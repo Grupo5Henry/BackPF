@@ -1,5 +1,4 @@
 const { fn, Sequelize } = require("sequelize");
-const { Col } = require("sequelize/types/utils");
 const { Order,  User } = require("../db");
 
 const getAllOrders = async() =>{
