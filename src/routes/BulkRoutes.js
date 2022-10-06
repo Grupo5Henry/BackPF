@@ -236,7 +236,7 @@ router.post("/randomOrder", async (req, res) => {
             limit: 1
         })
         console.log(orderNumber)
-        orderNumber = orderNumber[0].orderNumber
+        orderNumber = orderNumber.length ? orderNumber[0].orderNumber : 0
         console.log(orderNumber)
         // console.log(1)
         try {
