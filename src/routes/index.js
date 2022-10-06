@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
 router.post("/checkout", async (req, res) => {
     const { cart, productId } = req.body;
 
-    if (!cart.length) {
+    if (!cart) {
         try {
             const item = await Product.findByPk(productId)
 
