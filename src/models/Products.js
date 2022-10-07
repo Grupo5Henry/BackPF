@@ -27,13 +27,22 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        stock: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         price: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
         hidden: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false
+            defaultValue: false,
+            get () {
+                const stock = this.getDataValue("stock");
+                const rawValue = this.getDataValue("hidden");
+                return stock ? rawValue : true
+            }
         },
         condition: {
             type: DataTypes.STRING
