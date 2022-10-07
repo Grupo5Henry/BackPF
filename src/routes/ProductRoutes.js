@@ -170,7 +170,7 @@ router.get("/filterBy", async (req, res) => {
             offset: page * amount,
             limit: amount, 
             where: {
-                stock: {[Op.gt]: (stock ? -1 : 0)},
+                stock: {[Op.gt]: (stock === true ? 0 : -1)},
                 hidden: false,
                 brand: {[Op.iLike]: `%${brand}%`},
                 model: {[Op.iLike]: `%${model}%`},
