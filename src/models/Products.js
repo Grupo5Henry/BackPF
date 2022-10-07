@@ -38,10 +38,9 @@ module.exports = (sequelize) => {
         hidden: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
-            get () {
+            set () {
                 const stock = this.getDataValue("stock");
-                const rawValue = this.getDataValue("hidden");
-                return stock ? rawValue : true
+                this.setDataValue("hidden", stock ? false : true);
             }
         },
         condition: {
