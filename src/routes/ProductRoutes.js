@@ -93,7 +93,7 @@ router.get("/all", async (req, res) => {
             ]
             } : {
                 attributes: ["name"],
-                where: {hidden: false}
+                where: {hidden: false, stock: {[Op.gt]: 0}}
             })});
         res.send(products)
     } catch (err) {
