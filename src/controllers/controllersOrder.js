@@ -5,9 +5,7 @@ const getAllOrders = async () => {
   const data = await Order.findAll({
     include: {
       model: Product,
-      attributes: ["price"],
     },
-    order: ["Product", "price", "ASC"],
   });
   return data;
 };
