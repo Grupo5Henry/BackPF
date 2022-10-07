@@ -205,4 +205,22 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
+router.put("/newShippingAddress",async(req,res) => {
+  try {
+    var {defaultShippingAddress,userName} = req.body
+    var user = await conn.models.User.findByPk(userName)
+    await conn.models.User.update({
+      ...user,
+      defaultShippingAddress
+    },{
+      where: {
+        userName
+      }
+    })
+    res.send("Default shipping address update")
+  } catch (error) {
+    res.send(error)
+  }
+})
+
 module.exports = router;
