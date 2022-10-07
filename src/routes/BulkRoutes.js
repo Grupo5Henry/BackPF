@@ -58,7 +58,7 @@ router.post("/products", async (req, res) => {
                     thumbnail,
                     price,
                     condition,
-                    stock: Math.ceil(Math.random() * 5)     
+                    stock: Math.floor(Math.random() * 5)     
                 }) 
             if (categories) {
                 // console.log(categories)
