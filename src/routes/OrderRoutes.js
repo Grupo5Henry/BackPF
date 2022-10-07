@@ -39,7 +39,13 @@ router.get("/largestOrderNumber", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const result = await getAllOrders();
+    const result = await getAllOrders({
+      include: {
+        model: Product,
+        attributes: ["price"],
+      },
+      order: ["Product", "price", "ASC"],
+    });
     res.send(result);
   } catch (error) {
     console.log(error);
