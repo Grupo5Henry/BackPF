@@ -3,6 +3,7 @@ const { User, conn } = require('../db');
 const { Op, where } = require("sequelize")
 const router = Router();
 const authToken = require("./middleware/authenticateToken");
+const adminCheck = require('./middleware/adminCheck');
 const JWT = require("jsonwebtoken");
 const axios = require("axios");
 const bcrypt = require('bcrypt');
@@ -10,6 +11,7 @@ const bcrypt = require('bcrypt');
 
 router.post('/signup', async (req,res)=>{
     const { userName, password, email, defaultShippingAddress, billingAddress, role } = req.body;
+    
     try { 
     const user = await User.findOne({
     where: {
@@ -62,11 +64,6 @@ router.post('/signup', async (req,res)=>{
 router.post("/login", async (req, res) => {
     const { userName, password } = req.body;
 
-    // Look for user email in the database
-/*  let user = users.find((user) => {
-    return user.email === email;
-    }); */
-
     try {
     const user = await User.findOne({
     where: {
@@ -102,7 +99,8 @@ router.post("/login", async (req, res) => {
 
     // Send JWT
     const accessToken = await JWT.sign(
-    { userName },
+    { userName,
+      role: user.role },
     'ACCESS_TOKEN_SECRET',
     {
         expiresIn: "3600s",
@@ -110,7 +108,9 @@ router.post("/login", async (req, res) => {
     );
 
     res.json({
-    accessToken,
+    accessToken, 
+    privileges: user.role,
+    shippingAddress: user.defaultShippingAddress
     });
 } catch (err) {
     res.send({error: err.message})
@@ -141,29 +141,32 @@ router.get("/userAddress",async(req,res) => {
 
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
-router.put('/modify', authToken, async(req,res)=>{
-    let { role, userName, email, password, defaultShippingAddress, billingAddress, banned } = req.body;
-    if (password){
-        const salt = await bcrypt.genSalt(10);
-        password = await bcrypt.hash(password, salt);
+router.put('/modify', adminCheck, async(req,res)=>{
+    if(req.role=='Admin' || req.role == 'SuperAdmin'){
+        let { role, userName, email, password, defaultShippingAddress, billingAddress, banned } = req.body;
+        if (password){
+            const salt = await bcrypt.genSalt(10);
+            password = await bcrypt.hash(password, salt);
+        }
+        try{ 
+        await User.update(
+                { role, userName, email, password, defaultShippingAddress, billingAddress, banned },
+                {
+                    where: {userName: userName}
+                }
+            )
+            return res.send('User Updated');
+        } catch(err){
+            return res.status(400).send({error: err.message});
+        }
     }
-    try{ 
-       await User.update(
-            { role, userName, email, password, defaultShippingAddress, billingAddress, banned },
-            {
-                where: {userName: userName}
-            }
-        )
-        return res.send('User Updated');
-    } catch(err){
-        return res.status(400).send({error: err.message});
-    }
+    return res.send('Solamente un administrador puede realizar la operación');
 })
 
 
 router.put('/delete/:username', async(req,res)=>{
     const userName  = req.params.username;
-    console.log(userName);
+  
     try{ 
         await User.update(
             { banned:true },

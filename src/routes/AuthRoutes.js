@@ -8,11 +8,23 @@ const { BACK_URL, FRONT_URL } = require ('../constantes');
 
 //////////PASSPORT
 
+const checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) { return next() }
+  res.redirect(`${FRONT_URL}/home/log-in`)
+}
+
+router.get("/checkCookie", checkAuthenticated, (req, res) => {
+ /*  return res.status(200).send("todo bien", {name: req.user.displayName}) */
+  res.send({name: req.user.displayName,
+  id: req.user.id });
+})
+
+
 router.get('/login/success', async (req,res)=>{
  
   if(req.user){
   console.log('authroutes.js, req.user: ', req.user.id)
-  await User.findOrCreate({
+  const usuario = await User.findOrCreate({
     where: {userName: 'google:'+req.user.id},
     defaults:{
       role:"user",
@@ -23,10 +35,14 @@ router.get('/login/success', async (req,res)=>{
       banned: false
     }
   })
+  req.user.password="";
   res.status(200).json({
     success: true,
     message: "successful",
     user: req.user,
+    shipping: usuario[0].defaultShippingAddress,
+    role: usuario[0].role
+    
     /* cookies: req.cookies */
   });
   }
