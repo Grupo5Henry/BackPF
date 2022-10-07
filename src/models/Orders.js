@@ -30,9 +30,6 @@ module.exports = (sequelize) => {
     {
       timestamps: true,
       updatedAt: false,
-      createdAt: {
-        type: DataTypes.DATE,
-      },
     }
   );
 };
