@@ -170,7 +170,7 @@ router.put('/modify', adminCheck, async(req,res)=>{
 })
 
 
-router.put('/delete/:username', async(req,res)=>{
+router.put('/delete/:username', adminCheck, async(req,res)=>{
     const userName  = req.params.username;
   
     try{ 
