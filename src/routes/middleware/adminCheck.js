@@ -15,14 +15,16 @@ const adminCheck = async (req, res, next) => {
 
   // Authenticate token
   try {
-    const user = await jwt.verify(token, 'ACCESS_TOKEN_SECRET');
+    const user = await jwt.verify(token, "ACCESS_TOKEN_SECRET");
     req.user = user.userName;
     req.role = user.role;
-    
-    if(user.role !=='Admin' && user.role !=='SuperAdmin'){
-      res.status(403).send('Solo un administrador puede realizar esa operación');
+
+    if (user.role !== "Admin" && user.role !== "SuperAdmin") {
+      res
+        .status(403)
+        .send("Solo un administrador puede realizar esa operación");
     } else {
-    next();
+      next();
     }
   } catch (error) {
     res.status(403).json({

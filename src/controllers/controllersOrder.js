@@ -1,10 +1,10 @@
 const { Sequelize, fn } = require("sequelize");
-const { Order,  User } = require("../db");
+const { Order, User } = require("../db");
 
-const getAllOrders = async() =>{
-    const data = await Order.findAll()
-    return data;
-}
+const getAllOrders = async () => {
+  const data = await Order.findAll();
+  return data;
+};
 
 // const getGroupOrders = async() =>{
 //     const orders = await Order.findAll({
@@ -14,14 +14,15 @@ const getAllOrders = async() =>{
 //     return orders;
 // }
 
-const getOrderByOrderNumber = async (parametro) =>{
-    const data = await Order.findAll({
-        where : {
-            orderNumber : parametro
-        }})
-    return data;
-}
+const getOrderByOrderNumber = async (parametro) => {
+  const data = await Order.findAll({
+    where: {
+      orderNumber: parametro,
+    },
+  });
+  return data;
+};
 module.exports = {
-    getAllOrders,
-    getOrderByOrderNumber,
-}
+  getAllOrders,
+  getOrderByOrderNumber,
+};

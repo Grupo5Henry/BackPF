@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const authToken = async (req, res, next) => {
-
   const token = req.header("x-auth-token");
 
   // If token not found, send error message
@@ -18,10 +17,10 @@ const authToken = async (req, res, next) => {
 
   // Authenticate token
   try {
-    const user = await jwt.verify(token, 'ACCESS_TOKEN_SECRET');
+    const user = await jwt.verify(token, "ACCESS_TOKEN_SECRET");
     req.userName = user.userName;
     req.role = user.role;
-    req.defaultShippingAddress = user.defaultShippingAddress
+    req.defaultShippingAddress = user.defaultShippingAddress;
     next();
   } catch (error) {
     res.status(403).json({
