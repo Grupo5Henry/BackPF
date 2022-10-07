@@ -19,8 +19,9 @@ const authToken = async (req, res, next) => {
   // Authenticate token
   try {
     const user = await jwt.verify(token, 'ACCESS_TOKEN_SECRET');
-    req.user = user.userName;
+    req.userName = user.userName;
     req.role = user.role;
+    req.defaultShippingAddress = user.defaultShippingAddress
     next();
   } catch (error) {
     res.status(403).json({

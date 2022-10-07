@@ -46,7 +46,7 @@ router.post('/signup', async (req,res)=>{
             billingAddress,        
     })  
     const accessToken = await JWT.sign(
-        { userName , role},
+        { userName , role, defaultShippingAddress},
         'ACCESS_TOKEN_SECRET', 
         {
         expiresIn: "3600s",
@@ -55,6 +55,9 @@ router.post('/signup', async (req,res)=>{
 
     res.json({
         accessToken,
+        userName,
+        role,
+        defaultShippingAddress
     });
 
 } catch (err) {
@@ -100,7 +103,9 @@ router.post("/login", async (req, res) => {
     // Send JWT
     const accessToken = await JWT.sign(
     { userName,
-      role: user.role },
+      role: user.role,
+      defaultShippingAddress: user.defaultShippingAddress
+    },
     'ACCESS_TOKEN_SECRET',
     {
         expiresIn: "3600s",
@@ -108,9 +113,10 @@ router.post("/login", async (req, res) => {
     );
 
     res.json({
-    accessToken, 
+    accessToken,
+    userName: userName, 
     privileges: user.role,
-    shippingAddress: user.defaultShippingAddress
+    defaultShippingAddress: user.defaultShippingAddress
     });
 } catch (err) {
     res.send({error: err.message})
