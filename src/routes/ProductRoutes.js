@@ -164,6 +164,7 @@ router.get("/filterBy", async (req, res) => {
     if (!search) search = "";
     if (!minPrice) minPrice = 0;
     if (!maxPrice) maxPrice = 2147483647; // Max integer value
+    if (!stock && stock != 0) stock = 0;
 
     try {
         const products = await Product.findAndCountAll({
