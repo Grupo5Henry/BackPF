@@ -155,7 +155,7 @@ router.get("/itemsPerPage", async (req, res) => {
 //Ruta para filtrar (y ordenar por precio ASC y DESC)
 
 router.get("/filterBy", async (req, res) => {
-    let { category, brand, model, minPrice, maxPrice, search, order, amount, page } = req.query;
+    let { category, brand, model, minPrice, maxPrice, search, order, amount, page, stock } = req.query;
     // console.log(req.query)
     if (!page) page = 0; 
     if (!amount) amount = 10;
@@ -170,6 +170,7 @@ router.get("/filterBy", async (req, res) => {
             offset: page * amount,
             limit: amount, 
             where: {
+                ...(stock ? {stock: {[Op.gt]: 0}} : {}),
                 hidden: false,
                 brand: {[Op.iLike]: `%${brand}%`},
                 model: {[Op.iLike]: `%${model}%`},
