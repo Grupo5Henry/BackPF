@@ -42,7 +42,6 @@ router.get("/", async (req, res) => {
     const result = await getAllOrders({
       include: {
         model: Product,
-        attributes: ["price"],
       },
       order: ["Product", "price", "ASC"],
     });
