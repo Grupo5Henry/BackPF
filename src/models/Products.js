@@ -37,6 +37,10 @@ module.exports = (sequelize) => {
         },
         hidden: {
             type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            get () {
+                this.getDataValue("hidden")
+            },
             set () {
                 const stock = this.getDataValue("stock");
                 this.setDataValue("hidden", stock > 0 ? false : true);
