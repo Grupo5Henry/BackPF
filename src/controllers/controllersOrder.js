@@ -2,7 +2,13 @@ const { Sequelize, fn } = require("sequelize");
 const { Order, User } = require("../db");
 
 const getAllOrders = async () => {
-  const data = await Order.findAll();
+  const data = await Order.findAll({
+    include: {
+      model: Product,
+      attributes: ["price"],
+    },
+    order: ["Product", "price", "ASC"],
+  });
   return data;
 };
 
