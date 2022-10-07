@@ -1,10 +1,8 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const authToken = async (req, res, next) => {
+const adminCheck = async (req, res, next) => {
   const token = req.header("x-auth-token");
-
-  // If token not found, send error message
   if (!token) {
     return res.status(401).json({
       errors: [
@@ -18,10 +16,16 @@ const authToken = async (req, res, next) => {
   // Authenticate token
   try {
     const user = await jwt.verify(token, "ACCESS_TOKEN_SECRET");
-    req.userName = user.userName;
+    req.user = user.userName;
     req.role = user.role;
-    req.defaultShippingAddress = user.defaultShippingAddress;
-    next();
+
+    if (user.role !== "Admin" && user.role !== "SuperAdmin") {
+      res
+        .status(403)
+        .send("Solo un administrador puede realizar esa operación");
+    } else {
+      next();
+    }
   } catch (error) {
     res.status(403).json({
       errors: [
@@ -33,4 +37,4 @@ const authToken = async (req, res, next) => {
   }
 };
 
-module.exports = authToken;
+module.exports = adminCheck;
