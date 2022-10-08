@@ -59,16 +59,28 @@ router.post("/signup", async (req, res) => {
       }
     );
 
-    res.json({
-      accessToken,
-      userName,
-      role,
-      defaultShippingAddress,
-    });
-  } catch (err) {
-    res.send({ error: err.message });
-  }
-});
+
+    const refreshToken = await JWT.sign(
+        { userName,
+          role: "refresh" },
+        'ACCESS_TOKEN_SECRET',
+        {
+            expiresIn: "3900s",
+        }
+        );
+
+        res.json({
+            accessToken, 
+            refreshToken,
+            userName,
+            role: user.role,
+            defaultShippingAddress: user.defaultShippingAddress,
+            });
+
+} catch (err) {
+    res.send({error: err.message})
+}})
+
 
 router.post("/login", async (req, res) => {
   const { userName, password } = req.body;
@@ -117,11 +129,23 @@ router.post("/login", async (req, res) => {
       }
     );
 
+    const refreshToken = await JWT.sign(
+        { userName,
+          role: "refresh" },
+        'ACCESS_TOKEN_SECRET',
+        {
+            expiresIn: "3900s",
+        }
+        );
+
     res.json({
-      accessToken,
-      userName: userName,
-      privileges: user.role,
-      defaultShippingAddress: user.defaultShippingAddress,
+
+    accessToken, 
+    refreshToken,
+    userName,
+    role: user.role,
+    defaultShippingAddress: user.defaultShippingAddress
+
     });
   } catch (err) {
     res.send({ error: err.message });
