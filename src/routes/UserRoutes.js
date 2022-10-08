@@ -71,8 +71,8 @@ router.post("/signup", async (req, res) => {
       accessToken,
       refreshToken,
       userName,
-      role: user.role,
-      defaultShippingAddress: user.defaultShippingAddress,
+      role: newUser.role,
+      defaultShippingAddress: newUser.defaultShippingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
