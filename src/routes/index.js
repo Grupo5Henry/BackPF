@@ -1,73 +1,101 @@
-const { Router } = require('express');
-const UserRoutes = require ('./UserRoutes.js');
-const ProductRoutes = require('./ProductRoutes.js');
-const TokenCheck = require('./TokenCheck');
+const { Router } = require("express");
+const UserRoutes = require("./UserRoutes.js");
+const ProductRoutes = require("./ProductRoutes.js");
+const TokenCheck = require("./TokenCheck");
 const CategoryRoutes = require("./CategoryRoutes.js");
 const ReviewRoutes = require("./ReviewRoutes.js");
 const BulkRoutes = require("./BulkRoutes.js");
 const FavoriteRoutes = require("./FavoriteRoutes.js");
-const OrderRoutes = require ('./OrderRoutes');
-const CartRoutes = require ('./CartRoutes');
-const AuthRoutes = require ('./AuthRoutes');
-const { FRONT_URL } = require('../constantes.js');
-const { Product } = require('../db'); 
-
+const OrderRoutes = require("./OrderRoutes");
+const CartRoutes = require("./CartRoutes");
+const AuthRoutes = require("./AuthRoutes");
+const { FRONT_URL } = require("../constantes.js");
+const { Product } = require("../db");
 
 //STRIPE
-const { STRIPE_PRIVATE_KEY }= process.env;
-const stripe = require("stripe")(STRIPE_PRIVATE_KEY)
+const { STRIPE_PRIVATE_KEY } = process.env;
+const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
 //STRIPE
 
 const router = Router();
 
-
 router.get("/", (req, res) => {
-    res.send("Back Funcionando");
-})
+  res.send("Back Funcionando");
+});
 
 router.post("/checkout", async (req, res) => {
-    const { cart } = req.body;
+  const { cart, productId } = req.body;
+
+  if (!cart) {
     try {
-        const line_items = await Promise.all(cart.map( async product => {
-            let price = await Product.findByPk(product.product.id, {attributes: ["price"]})
-            return {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: product.product.name
-                    },
-                    unit_amount: price.dataValues.price * 100                         
-                },
-                quantity: product.amount
-            }
-        }))
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            mode: "payment",
-            line_items: line_items,
-            success_url: `${FRONT_URL}/congrats`,
-            cancel_url: `${FRONT_URL}/cart`
-        })
+      const item = await Product.findByPk(productId);
 
-        res.json({url: session.url})
+      let line_item = {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.dataValues.name,
+          },
+          unit_amount: item.dataValues.price * 100,
+        },
+        quantity: 1,
+      };
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: [line_item],
+        success_url: `${FRONT_URL}/congrats`,
+        cancel_url: `${FRONT_URL}/home/detail/${productId}`,
+      });
+      return res.json({ url: session.url });
     } catch (err) {
-        // console.log(err.message)
-        res.status(500).send({error: err.message})
+      return res.status(500).send({ error: err.message });
     }
-})
+  }
 
-router.use('/user', UserRoutes)
-router.use('/product', ProductRoutes)
-router.use('/category', CategoryRoutes)
-router.use('/review', ReviewRoutes)
-router.use('/bulk', BulkRoutes)
-router.use('/token', TokenCheck)
-router.use('/favorite', FavoriteRoutes)
-router.use('/order', OrderRoutes)
-router.use('/cart', CartRoutes)
-router.use('/auth', AuthRoutes)
+  try {
+    const line_items = await Promise.all(
+      cart.map(async (product) => {
+        let price = await Product.findByPk(product.product.id, {
+          attributes: ["price"],
+        });
+        return {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: product.product.name,
+            },
+            unit_amount: price.dataValues.price * 100,
+          },
+          quantity: product.amount,
+        };
+      })
+    );
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: line_items,
+      success_url: `${FRONT_URL}/congrats`,
+      cancel_url: `${FRONT_URL}/cart`,
+    });
 
+    res.json({ url: session.url });
+  } catch (err) {
+    // console.log(err.message)
+    res.status(500).send({ error: err.message });
+  }
+});
 
+router.use("/user", UserRoutes);
+router.use("/product", ProductRoutes);
+router.use("/category", CategoryRoutes);
+router.use("/review", ReviewRoutes);
+router.use("/bulk", BulkRoutes);
+router.use("/token", TokenCheck);
+router.use("/favorite", FavoriteRoutes);
+router.use("/order", OrderRoutes);
+router.use("/cart", CartRoutes);
+router.use("/auth", AuthRoutes);
 
 /* 
     RUTAS USUARIOS
@@ -105,11 +133,7 @@ router.use('/auth', AuthRoutes)
 
     */
 
-
-
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
-
-
 
 module.exports = router;

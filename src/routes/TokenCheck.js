@@ -1,14 +1,21 @@
+
 const { Router } = require('express');
 const { User } = require('../db');
+
 const router = Router();
 const JWT = require("jsonwebtoken");
 const authToken = require("./middleware/authenticateToken");
 
-
-
-router.get('/tokenCheck', authToken, async (req,res)=>{
-  return res.status(200).send(true);
+router.get("/tokenCheck", authToken, async (req, res) => {
+  return res
+    .status(200)
+    .send({
+      userName: req.userName,
+      defaultShippingAddress: req.defaultShippingAddress,
+      role: req.role,
+    });
 });
+
    
 router.get('/tokenRefresh', authToken, async (req,res)=>{
   
@@ -48,6 +55,7 @@ router.get('/tokenRefresh', authToken, async (req,res)=>{
     res.send({error: err.message})
 }
 });
+
 
 
 module.exports = router;
