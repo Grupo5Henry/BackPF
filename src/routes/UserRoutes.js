@@ -17,7 +17,7 @@ router.post("/signup", async (req, res) => {
     billingAddress,
     role,
   } = req.body;
-
+  console.log(req.body);
   try {
     const user = await User.findOne({
       where: {
