@@ -40,8 +40,9 @@ router.get("/tokenRefresh", authToken, async (req, res) => {
     res.json({
       accessToken,
       refreshToken,
+      userName: user.userName,
       role: user.role,
-      shippingAddress: user.defaultShippingAddress,
+      defaultShippingAddress: user.defaultShippingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });

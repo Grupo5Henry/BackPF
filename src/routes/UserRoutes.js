@@ -59,28 +59,25 @@ router.post("/signup", async (req, res) => {
       }
     );
 
-
     const refreshToken = await JWT.sign(
-        { userName,
-          role: "refresh" },
-        'ACCESS_TOKEN_SECRET',
-        {
-            expiresIn: "3900s",
-        }
-        );
+      { userName, role: "refresh" },
+      "ACCESS_TOKEN_SECRET",
+      {
+        expiresIn: "3900s",
+      }
+    );
 
-        res.json({
-            accessToken, 
-            refreshToken,
-            userName,
-            role: user.role,
-            defaultShippingAddress: user.defaultShippingAddress,
-            });
-
-} catch (err) {
-    res.send({error: err.message})
-}})
-
+    res.json({
+      accessToken,
+      refreshToken,
+      userName,
+      role: user.role,
+      defaultShippingAddress: user.defaultShippingAddress,
+    });
+  } catch (err) {
+    res.send({ error: err.message });
+  }
+});
 
 router.post("/login", async (req, res) => {
   const { userName, password } = req.body;
@@ -130,22 +127,19 @@ router.post("/login", async (req, res) => {
     );
 
     const refreshToken = await JWT.sign(
-        { userName,
-          role: "refresh" },
-        'ACCESS_TOKEN_SECRET',
-        {
-            expiresIn: "3900s",
-        }
-        );
+      { userName, role: "refresh" },
+      "ACCESS_TOKEN_SECRET",
+      {
+        expiresIn: "3900s",
+      }
+    );
 
     res.json({
-
-    accessToken, 
-    refreshToken,
-    userName,
-    role: user.role,
-    defaultShippingAddress: user.defaultShippingAddress
-
+      accessToken,
+      refreshToken,
+      userName,
+      role: user.role,
+      defaultShippingAddress: user.defaultShippingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -229,22 +223,25 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
-router.put("/newShippingAddress",async(req,res) => {
+router.put("/newShippingAddress", async (req, res) => {
   try {
-    var {defaultShippingAddress,userName} = req.body
-    var user = await conn.models.User.findByPk(userName)
-    await conn.models.User.update({
-      ...user,
-      defaultShippingAddress
-    },{
-      where: {
-        userName
+    var { defaultShippingAddress, userName } = req.body;
+    var user = await conn.models.User.findByPk(userName);
+    await conn.models.User.update(
+      {
+        ...user,
+        defaultShippingAddress,
+      },
+      {
+        where: {
+          userName,
+        },
       }
-    })
-    res.send("Default shipping address update")
+    );
+    res.send("Default shipping address update");
   } catch (error) {
-    res.send(error)
+    res.send(error);
   }
-})
+});
 
 module.exports = router;
