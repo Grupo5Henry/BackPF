@@ -172,8 +172,8 @@ router.get("/userAddress", async (req, res) => {
 router.put("/modify", adminCheck, async (req, res) => {
   if (req.role == "Admin" || req.role == "SuperAdmin") {
     let {
-      role,
-      userName,
+      roleToModify,
+      userNameToModify,
       email,
       password,
       defaultShippingAddress,
@@ -187,8 +187,8 @@ router.put("/modify", adminCheck, async (req, res) => {
     try {
       await User.update(
         {
-          role,
-          userName,
+          role: roleToModify,
+          userName: userNameToModify,
           email,
           password,
           defaultShippingAddress,
