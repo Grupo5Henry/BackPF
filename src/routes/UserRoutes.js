@@ -170,40 +170,40 @@ router.get("/userAddress", async (req, res) => {
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
 router.put("/modify", adminCheck, async (req, res) => {
-  const {
-    role,
-    userName,
-    email,
-    password,
-    defaultShippingAddress,
-    billingAddress,
-    banned,
-  } = req.body;
-
-  if (password) {
-    const salt = await bcrypt.genSalt(10);
-    password = await bcrypt.hash(password, salt);
+  if (req.roleAdmin == "Admin" || req.roleAdmin == "SuperAdmin") {
+    let {
+      role,
+      userName,
+      email,
+      password,
+      defaultShippingAddress,
+      billingAddress,
+      banned,
+    } = req.body;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      password = await bcrypt.hash(password, salt);
+    }
+    try {
+      await User.update(
+        {
+          role,
+          userName,
+          email,
+          password,
+          defaultShippingAddress,
+          billingAddress,
+          banned,
+        },
+        {
+          where: { userName: userName },
+        }
+      );
+      return res.send("User Updated");
+    } catch (err) {
+      return res.status(400).send({ error: err.message });
+    }
   }
-  try {
-    await User.update(
-      {
-        role,
-        userName,
-        email,
-        password,
-        defaultShippingAddress,
-        billingAddress,
-        banned,
-      },
-      {
-        where: { userName: userName },
-      }
-    );
-    return res.send("User Updated");
-  } catch (err) {
-    return res.status(400).send({ error: err.message });
-  }
-
   return res.send("Solamente un administrador puede realizar la operación");
 });
 
