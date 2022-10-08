@@ -170,7 +170,7 @@ router.get("/userAddress", async (req, res) => {
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
 router.put("/modify", adminCheck, async (req, res) => {
-  if (req.role == "Admin" || req.role == "SuperAdmin") {
+  if (req.role == "admin" || req.role == "superAdmin") {
     let {
       role,
       userName,
