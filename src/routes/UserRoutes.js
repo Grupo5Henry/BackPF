@@ -66,7 +66,7 @@ router.post("/signup", async (req, res) => {
         expiresIn: "3900s",
       }
     );
-
+    console.log(accessToken, refreshToken);
     res.json({
       accessToken,
       refreshToken,
