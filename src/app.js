@@ -41,7 +41,7 @@ server.use(
     sameSite: "none",
     secure: true,
     allowedHeaders:
-      "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept",
+      "X-Requested-With, x-auth-token, X-HTTP-Method-Override, Content-Type, Accept",
   })
 );
 //////////PASSPORT

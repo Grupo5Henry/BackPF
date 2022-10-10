@@ -61,15 +61,9 @@ router.get("/login/failed", (req, res) => {
 
 router.get(
   "/google",
-  passport.authenticate(
-    "google",
-    {
-      scope: ["profile"],
-    },
-    (req, res) => {
-      console.log(req.user);
-    }
-  )
+  passport.authenticate("google", {
+    scope: ["profile"],
+  })
 );
 
 router.get(
