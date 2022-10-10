@@ -21,6 +21,7 @@ router.get("/checkCookie", checkAuthenticated, (req, res) => {
 });
 
 router.get("/login/success", async (req, res) => {
+  console.log(req.session);
   if (req.user) {
     console.log("authroutes.js, req.user: ", req.user.id);
     const usuario = await User.findOrCreate({
