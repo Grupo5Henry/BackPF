@@ -38,6 +38,10 @@ server.use(
     origin: CORS_URL, //react
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
+    sameSite: "none",
+    secure: true,
+    allowedHeaders:
+      "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept",
   })
 );
 //////////PASSPORT
