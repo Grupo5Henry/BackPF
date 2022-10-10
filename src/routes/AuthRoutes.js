@@ -63,7 +63,11 @@ router.get("/login/failed", (req, res) => {
 
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile"], session: false })
+  passport.authenticate("google", {
+    scope: ["profile"],
+    session: false,
+    withCredentials: true,
+  })
 );
 
 router.get(
