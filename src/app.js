@@ -29,7 +29,7 @@ server.use(
     keys: ["poneralgoenenv"],
     maxAge: 600000,
     // sameSite: "none",
-    // secure: false,
+    secure: true,
     // httpOnly: false,
     /* maxAge: 24*60*60*100 */
   })
