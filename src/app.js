@@ -34,6 +34,7 @@ server.use(
     /* maxAge: 24*60*60*100 */
   })
 );
+
 server.use(passport.initialize());
 server.use(passport.session());
 server.use(
