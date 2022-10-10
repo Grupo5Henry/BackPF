@@ -64,6 +64,7 @@ router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile"],
+    session: true,
   })
 );
 
