@@ -28,6 +28,9 @@ server.use(
     name: "session",
     keys: ["poneralgoenenv"],
     maxAge: 600000,
+    sameSite: "none",
+    secure: false,
+    httpOnly: false,
     /* maxAge: 24*60*60*100 */
   })
 );
