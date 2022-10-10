@@ -16,6 +16,7 @@ passport.use(
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: `${BACK_URL}/auth/google/callback`,
+      passReqToCallback: true,
     },
 
     /* function(accessToken, refreshToken, profile, cb) {
@@ -26,7 +27,7 @@ passport.use(
 
     function (accessToken, refreshToken, profile, done) {
       //console.log('passport.js, profile: ',profile.photos[0].value)
-      done(null, profile);
+      return done(null, profile);
     }
   )
 );
