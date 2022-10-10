@@ -59,7 +59,7 @@ router.post("/signup", async (req, res) => {
     );
 
     const refreshToken = await JWT.sign(
-      { userName, role: "refresh", defaultShippingAddress},
+      { userName, role: "refresh", defaultShippingAddress },
       "ACCESS_TOKEN_SECRET",
       {
         expiresIn: "4200s",
@@ -85,6 +85,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({
       where: {
         userName,
+        banned: false,
       },
     });
 
@@ -126,9 +127,11 @@ router.post("/login", async (req, res) => {
     );
 
     const refreshToken = await JWT.sign(
-      { userName, 
+      {
+        userName,
         role: "refresh",
-        defaultShippingAddress: user.defaultShippingAddress },
+        defaultShippingAddress: user.defaultShippingAddress,
+      },
       "ACCESS_TOKEN_SECRET",
       {
         expiresIn: "4200s",
