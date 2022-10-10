@@ -22,6 +22,9 @@ router.get("/checkCookie", checkAuthenticated, (req, res) => {
 
 router.get("/login/success", async (req, res) => {
   console.log("llegue aca", "AuthRoute.js");
+  console.log(req.cookies, "cookies");
+  console.log(req.body, "body");
+  console.log(req.res, "res");
   console.log(Object.keys(req));
   if (req.user) {
     console.log("authroutes.js, req.user: ", req.user.id);
@@ -65,8 +68,8 @@ router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile"],
-    session: false,
-    withCredentials: true,
+    // session: false,
+    // withCredentials: true,
   })
 );
 
