@@ -30,7 +30,7 @@ server.use(
     maxAge: 600000,
     // sameSite: "none",
     secure: true,
-    // httpOnly: false,
+    httpOnly: false,
     /* maxAge: 24*60*60*100 */
   })
 );
