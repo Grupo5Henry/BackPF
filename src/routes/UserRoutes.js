@@ -38,9 +38,9 @@ router.post("/signup", async (req, res) => {
 
     // Hash password before saving to database
     const salt = await bcrypt.genSalt(10);
-    console.log("salt:", salt);
+    // console.log("salt:", salt);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("hashed password:", hashedPassword);
+    // console.log("hashed password:", hashedPassword);
 
     const newUser = await User.create({
       role,
@@ -65,7 +65,7 @@ router.post("/signup", async (req, res) => {
         expiresIn: "4200s",
       }
     );
-    console.log(accessToken, refreshToken);
+    // console.log(accessToken, refreshToken);
     res.json({
       accessToken,
       refreshToken,
