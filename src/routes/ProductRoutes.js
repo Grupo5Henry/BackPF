@@ -30,6 +30,7 @@ router.post("/create", async (req, res) => {
     price,
     condition,
     categories,
+    stock,
   } = req.body;
   // console.log(req.body);
   try {
@@ -41,6 +42,7 @@ router.post("/create", async (req, res) => {
       thumbnail,
       price,
       condition,
+      stock,
     });
     if (categories.length /* Si el arreglo tiene algo */) {
       // categories va a ser un array con categorias. En el front va a haber un select con
