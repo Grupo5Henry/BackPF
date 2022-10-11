@@ -26,7 +26,7 @@ passport.use(
 
     function (accessToken, refreshToken, profile, done) {
       //console.log('passport.js, profile: ',profile.photos[0].value)
-      done(null, profile);
+      return done(null, profile);
     }
   )
 );

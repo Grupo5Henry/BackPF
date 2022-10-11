@@ -17,7 +17,6 @@ router.post("/signup", async (req, res) => {
     billingAddress,
     role,
   } = req.body;
-
   try {
     const user = await User.findOne({
       where: {
@@ -59,11 +58,20 @@ router.post("/signup", async (req, res) => {
       }
     );
 
+    const refreshToken = await JWT.sign(
+      { userName, role: "refresh", defaultShippingAddress },
+      "ACCESS_TOKEN_SECRET",
+      {
+        expiresIn: "4200s",
+      }
+    );
+    console.log(accessToken, refreshToken);
     res.json({
       accessToken,
+      refreshToken,
       userName,
-      role,
-      defaultShippingAddress,
+      role: role,
+      defaultShippingAddress: defaultShippingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -77,6 +85,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({
       where: {
         userName,
+        banned: false,
       },
     });
 
@@ -117,10 +126,23 @@ router.post("/login", async (req, res) => {
       }
     );
 
+    const refreshToken = await JWT.sign(
+      {
+        userName,
+        role: "refresh",
+        defaultShippingAddress: user.defaultShippingAddress,
+      },
+      "ACCESS_TOKEN_SECRET",
+      {
+        expiresIn: "4200s",
+      }
+    );
+
     res.json({
       accessToken,
-      userName: userName,
-      privileges: user.role,
+      refreshToken,
+      userName,
+      role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
     });
   } catch (err) {
@@ -152,7 +174,7 @@ router.get("/userAddress", async (req, res) => {
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
 router.put("/modify", adminCheck, async (req, res) => {
-  if (req.role == "Admin" || req.role == "SuperAdmin") {
+  if (req.role == "admin" || req.role == "superAdmin") {
     let {
       role,
       userName,
@@ -202,6 +224,27 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
     return res.send("User Banned");
   } catch (err) {
     return res.status(400).send({ error: err.message });
+  }
+});
+
+router.put("/newShippingAddress", async (req, res) => {
+  try {
+    var { defaultShippingAddress, userName } = req.body;
+    var user = await conn.models.User.findByPk(userName);
+    await conn.models.User.update(
+      {
+        ...user,
+        defaultShippingAddress,
+      },
+      {
+        where: {
+          userName,
+        },
+      }
+    );
+    res.send("Default shipping address update");
+  } catch (error) {
+    res.send(error);
   }
 });
 

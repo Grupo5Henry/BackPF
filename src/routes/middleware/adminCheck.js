@@ -19,7 +19,7 @@ const adminCheck = async (req, res, next) => {
     req.user = user.userName;
     req.role = user.role;
 
-    if (user.role !== "Admin" && user.role !== "SuperAdmin") {
+    if (user.role !== "admin" && user.role !== "superAdmin") {
       res
         .status(403)
         .send("Solo un administrador puede realizar esa operación");
