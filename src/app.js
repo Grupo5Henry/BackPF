@@ -5,7 +5,8 @@ const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const { BACK_URL, FRONT_URL, CORS_URL } = require("./constantes");
 ///AUTH
-const cookieSession = require("cookie-session");
+//const cookieSession = require("cookie-session");
+const session = require("express-session");
 const cors = require("cors");
 const passportSetup = require("./auth/passport");
 const passport = require("passport");
@@ -23,14 +24,8 @@ server.use(cookieParser());
 server.use(morgan("dev"));
 
 //////////PASSPORT ojo que hay un import de cors mas arriba
-server.use(
-  cookieSession({
-    name: "session",
-    keys: ["poneralgoenenv"],
-    maxAge: 600000,
-    /* maxAge: 24*60*60*100 */
-  })
-);
+
+server.use(session({secret: 'estoesunsecreto', resave:false,saveUninitialized:false, cookie : {maxAge:(1 * 60 * 60 * 1000)}}))
 server.use(passport.initialize());
 server.use(passport.session());
 server.use(
@@ -38,6 +33,10 @@ server.use(
     origin: CORS_URL, //react
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
+    sameSite: "none",
+    secure: true,
+    allowedHeaders:
+      "X-Requested-With, x-auth-token, X-HTTP-Method-Override, Content-Type, Accept, access-control-allow-credentials",
   })
 );
 //////////PASSPORT
