@@ -88,7 +88,15 @@ router.post(
     try {
       event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
     } catch (err) {
+      console.log({ error: err.message });
       return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+
+      // Fulfill the purchase...
+      console.log(session);
     }
 
     response.status(200);
