@@ -47,7 +47,7 @@ router.post("/checkout", async (req, res) => {
         success_url: `${FRONT_URL}/congrats`,
         cancel_url: `${FRONT_URL}/home/detail/${productId}`,
       });
-      return res.json({ url: session.url });
+      return res.json({ url: session.url, sessioId: session });
     } catch (err) {
       return res.status(500).send({ error: err.message });
     }
