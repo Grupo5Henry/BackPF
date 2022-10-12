@@ -77,6 +77,7 @@ router.post("/checkout", async (req, res) => {
 
 router.post("/webhook", (request, response) => {
   console.log(request.body);
+  console.log(request.headers);
   const payload = request.rawBody;
   const sig = request.headers["stripe-signature"];
 
