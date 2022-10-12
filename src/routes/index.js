@@ -14,8 +14,7 @@ const { FRONT_URL } = require("../constantes.js");
 const { Product } = require("../db");
 
 //STRIPE
-const { STRIPE_PRIVATE_KEY } = process.env;
-const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
+
 //STRIPE
 
 const router = Router();

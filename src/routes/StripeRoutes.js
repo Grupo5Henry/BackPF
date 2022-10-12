@@ -1,11 +1,14 @@
 const { Router } = require("express");
-const { User } = require("../db");
+const { User, Product } = require("../db");
 const { Op, where } = require("sequelize");
 const router = Router();
 const axios = require("axios");
 const passport = require("passport"); /////////PASSPORT
 const { BACK_URL, FRONT_URL } = require("../constantes");
 const bodyParser = require("body-parser");
+
+const { STRIPE_PRIVATE_KEY } = process.env;
+const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
 
 module.exports = router;
 
