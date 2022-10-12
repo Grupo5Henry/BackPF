@@ -12,6 +12,10 @@ const { endpointSecret } = process.env;
 
 module.exports = router;
 
+const fulfillOrder = (session) => {
+  console.log(session);
+};
+
 router.post("/checkout", async (req, res) => {
   const { cart, productId } = req.body;
 
@@ -100,7 +104,3 @@ router.post("/webhook", (request, response) => {
 
   response.status(200);
 });
-
-const fulfillOrder = (session) => {
-  console.log(session);
-};
