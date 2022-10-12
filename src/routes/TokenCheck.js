@@ -17,12 +17,12 @@ router.get("/tokenRefresh", authToken, async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
-        userName: req.user,
+        userName: req.userName,
       },
     });
 
     const accessToken = await JWT.sign(
-      { userName: user.userName, role: user.role },
+      { userName: user.userName, role: user.role, defaultShippingAddress:req.defaultShippingAddress },
       "ACCESS_TOKEN_SECRET",
       {
         expiresIn: "3600s",
@@ -33,15 +33,16 @@ router.get("/tokenRefresh", authToken, async (req, res) => {
       { userName: user.userName, role: user.role },
       "ACCESS_TOKEN_SECRET",
       {
-        expiresIn: "3900s",
+        expiresIn: "7200s",
       }
     );
 
     res.json({
       accessToken,
       refreshToken,
+      userName: user.userName,
       role: user.role,
-      shippingAddress: user.defaultShippingAddress,
+      defaultShippingAddress: user.defaultShippingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
