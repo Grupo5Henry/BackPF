@@ -5,6 +5,7 @@ const router = Router();
 const axios = require("axios");
 const passport = require("passport"); /////////PASSPORT
 const { BACK_URL, FRONT_URL } = require("../constantes");
+const bodyParser = require("body-parser");
 
 module.exports = router;
 
