@@ -25,6 +25,18 @@ const fulfillOrder = async (session) => {
   }
 };
 
+const cancelOrder = async (session) => {
+  const { orderNumber } = session.metadata;
+  try {
+    axios.put(`${BACK_URL}/order/change`, {
+      orderNumber,
+      newStatus: "Cancelled",
+    });
+  } catch (err) {
+    console.log({ error: err.message });
+  }
+};
+
 router.post("/checkout", async (req, res) => {
   const { cart, productId, orderNumber, userName } = req.body;
 
@@ -109,6 +121,8 @@ router.post("/webhook", async (request, response) => {
       // Fulfill the purchase...
 
       await fulfillOrder(session);
+    } else {
+      cancelOrder(session);
     }
   }
 
