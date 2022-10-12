@@ -76,8 +76,6 @@ router.post("/checkout", async (req, res) => {
 });
 
 router.post("/webhook", (request, response) => {
-  console.log(request.body);
-  console.log(request.rawBody);
   const payload = request.body;
   const sig = request.headers["stripe-signature"];
 
@@ -94,8 +92,9 @@ router.post("/webhook", (request, response) => {
     const session = event.data.object;
 
     // Fulfill the purchase...
-    console.log(session);
+    console.log(session, "super victoria");
   }
+  console.log("victoria");
 
   response.status(200);
 });
