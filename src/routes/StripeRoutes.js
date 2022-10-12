@@ -40,32 +40,33 @@ const cancelOrder = async (session) => {
 router.post("/checkout", async (req, res) => {
   const { cart, productId, orderNumber, userName } = req.body;
 
-  if (!cart) {
-    try {
-      const item = await Product.findByPk(productId);
+  //   if (!cart) {
+  //     try {
+  //       const item = await Product.findByPk(productId);
 
-      let line_item = {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: item.dataValues.name,
-          },
-          unit_amount: item.dataValues.price * 100,
-        },
-        quantity: 1,
-      };
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        mode: "payment",
-        line_items: [line_item],
-        success_url: `${FRONT_URL}/congrats?success=true`,
-        cancel_url: `${FRONT_URL}/home/detail/${productId}`,
-      });
-      return res.json({ url: session.url, sessioId: session });
-    } catch (err) {
-      return res.status(500).send({ error: err.message });
-    }
-  }
+  //       let line_item = {
+  //         price_data: {
+  //           currency: "usd",
+  //           product_data: {
+  //             name: item.dataValues.name,
+  //           },
+  //           unit_amount: item.dataValues.price * 100,
+  //         },
+  //         quantity: 1,
+  //       };
+  //       const session = await stripe.checkout.sessions.create({
+  //         payment_method_types: ["card"],
+  //         mode: "payment",
+  //         line_items: [line_item],
+  //         success_url: `${FRONT_URL}/congrats?success=true`,
+  //         cancel_url: `${FRONT_URL}/home/detail/${productId}`,
+  //       });
+
+  //       return res.json({ url: session.url, sessioId: session });
+  //     } catch (err) {
+  //       return res.status(500).send({ error: err.message });
+  //     }
+  //   }
 
   try {
     const line_items = await Promise.all(
@@ -94,6 +95,14 @@ router.post("/checkout", async (req, res) => {
       metadata: { orderNumber, userName },
     });
 
+    try {
+      axios.put(`${BACK_URL}/order/change`, {
+        orderNumber,
+        url: session.url,
+      });
+    } catch (err) {
+      console.log({ error: err.message });
+    }
     res.json({ url: session.url });
   } catch (err) {
     // console.log(err.message)
