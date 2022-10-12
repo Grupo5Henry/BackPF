@@ -14,7 +14,7 @@ const { endpointSecret } = process.env;
 module.exports = router;
 
 const fulfillOrder = async (session) => {
-  const { orderNumber } = session.metadata;
+  const { orderNumber, cart } = session.metadata;
   try {
     axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
