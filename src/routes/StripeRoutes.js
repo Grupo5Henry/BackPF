@@ -37,7 +37,7 @@ router.post("/checkout", async (req, res) => {
         payment_method_types: ["card"],
         mode: "payment",
         line_items: [line_item],
-        success_url: `${FRONT_URL}/congrats`,
+        success_url: `${FRONT_URL}/congrats?success=true`,
         cancel_url: `${FRONT_URL}/home/detail/${productId}`,
       });
       return res.json({ url: session.url, sessioId: session });
@@ -68,7 +68,7 @@ router.post("/checkout", async (req, res) => {
       payment_method_types: ["card"],
       mode: "payment",
       line_items: line_items,
-      success_url: `${FRONT_URL}/congrats`,
+      success_url: `${FRONT_URL}/congrats?success=true`,
       cancel_url: `${FRONT_URL}/cart`,
     });
 
@@ -92,16 +92,15 @@ router.post("/webhook", (request, response) => {
     return response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (
-    event.type === "checkout.session.completed" &&
-    session.payment_status === "paid"
-  ) {
+  if (event.type === "checkout.session.completed") {
     const session = event.data.object;
 
-    // Fulfill the purchase...
-    console.log("2");
+    if (session.payment_status === "paid") {
+      // Fulfill the purchase...
+      console.log("2");
 
-    fulfillOrder(session);
+      fulfillOrder(session);
+    }
   }
   console.log("1");
 
