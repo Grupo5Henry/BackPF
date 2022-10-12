@@ -88,13 +88,19 @@ router.post("/webhook", (request, response) => {
     return response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === "checkout.session.completed") {
+  if (
+    event.type === "checkout.session.completed" &&
+    session.payment_status === "paid"
+  ) {
     const session = event.data.object;
 
     // Fulfill the purchase...
-    console.log(session, "super victoria");
+    fulfillOrder(session);
   }
-  console.log("victoria");
 
   response.status(200);
 });
+
+const fulfillOrder = (session) => {
+  console.log(session);
+};
