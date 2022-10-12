@@ -23,18 +23,18 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  for (let product of cart) {
-    try {
-      await Product.update(
-        {
-          stock: +product.amount,
-        },
-        { where: { id: product.id } }
-      );
-    } catch (err) {
-      console.log({ error: err.message });
-    }
-  }
+  //   for (let product of cart) {
+  //     try {
+  //       await Product.update(
+  //         {
+  //           stock: product.amount,
+  //         },
+  //         { where: { id: product.id } }
+  //       );
+  //     } catch (err) {
+  //       console.log({ error: err.message });
+  //     }
+  //   }
 };
 
 const cancelOrder = async (session) => {
@@ -116,7 +116,7 @@ router.post("/checkout", async (req, res) => {
       line_items: line_items,
       success_url: `${FRONT_URL}/congrats?success=true`,
       cancel_url: `${FRONT_URL}/cart`,
-      metadata: { orderNumber, userName, cart },
+      metadata: { orderNumber, userName },
     });
     // console.log(session.url);
     try {
