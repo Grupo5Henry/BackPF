@@ -227,14 +227,14 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
-router.put("/newShippingAddress", async (req, res) => {
+router.put("/newAddress", async (req, res) => {
   try {
-    var { defaultShippingAddress, userName } = req.body;
-    var user = await conn.models.User.findByPk(userName);
-    await conn.models.User.update(
+    var { defaultShippingAddress, billingAddress, userName } = req.body;
+    // var user = await conn.models.User.findByPk(userName);
+    await User.update(
       {
-        ...user,
         defaultShippingAddress,
+        billingAddress,
       },
       {
         where: {
@@ -242,7 +242,7 @@ router.put("/newShippingAddress", async (req, res) => {
         },
       }
     );
-    res.send("Default shipping address update");
+    res.send("Default address updated");
   } catch (error) {
     res.send(error);
   }
