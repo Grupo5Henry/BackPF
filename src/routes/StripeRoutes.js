@@ -94,15 +94,15 @@ router.post("/checkout", async (req, res) => {
       cancel_url: `${FRONT_URL}/cart`,
       metadata: { orderNumber, userName },
     });
-
-    try {
-      axios.put(`${BACK_URL}/order/change`, {
-        orderNumber,
-        url: session.url,
-      });
-    } catch (err) {
-      console.log({ error: err.message });
-    }
+    console.log(session.url);
+    // try {
+    //   axios.put(`${BACK_URL}/order/change`, {
+    //     orderNumber,
+    //     url: session.url,
+    //   });
+    // } catch (err) {
+    //   console.log({ error: err.message });
+    // }
     res.json({ url: session.url });
   } catch (err) {
     // console.log(err.message)
