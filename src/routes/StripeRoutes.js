@@ -1,9 +1,8 @@
 const { Router } = require("express");
 const { User, Product } = require("../db");
-const { Op, where } = require("sequelize");
+
 const router = Router();
-const axios = require("axios");
-const passport = require("passport"); /////////PASSPORT
+
 const { BACK_URL, FRONT_URL } = require("../constantes");
 const bodyParser = require("body-parser");
 
@@ -77,7 +76,7 @@ router.post("/checkout", async (req, res) => {
   }
 });
 
-app.post(
+router.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
   (request, response) => {
