@@ -75,13 +75,20 @@ router.post("/checkout", async (req, res) => {
   }
 });
 
-router.post(
+app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
   (request, response) => {
     const payload = request.body;
+    const sig = request.headers["stripe-signature"];
 
-    console.log("Got payload: " + payload);
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+    } catch (err) {
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
 
     response.status(200);
   }
