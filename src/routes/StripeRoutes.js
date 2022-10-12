@@ -99,8 +99,11 @@ router.post("/webhook", (request, response) => {
     const session = event.data.object;
 
     // Fulfill the purchase...
+    console.log("2");
+
     fulfillOrder(session);
   }
+  console.log("1");
 
   response.status(200);
 });
