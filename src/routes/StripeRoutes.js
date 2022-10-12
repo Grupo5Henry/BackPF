@@ -17,7 +17,7 @@ const fulfillOrder = (session) => {
 };
 
 router.post("/checkout", async (req, res) => {
-  const { cart, productId } = req.body;
+  const { cart, productId, orderNumber } = req.body;
 
   if (!cart) {
     try {
@@ -70,6 +70,7 @@ router.post("/checkout", async (req, res) => {
       line_items: line_items,
       success_url: `${FRONT_URL}/congrats?success=true`,
       cancel_url: `${FRONT_URL}/cart`,
+      orderNumber: orderNumber,
     });
 
     res.json({ url: session.url });
