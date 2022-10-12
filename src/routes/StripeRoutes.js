@@ -8,8 +8,7 @@ const bodyParser = require("body-parser");
 
 const { STRIPE_PRIVATE_KEY } = process.env;
 const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
-const endpointSecret =
-  "whsec_82049d42178d6f31736fa6caa0c908de7011bac921b8ef79131c8878efb16de1";
+const { endpointSecret } = process.env;
 
 module.exports = router;
 
