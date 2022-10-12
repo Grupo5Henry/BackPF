@@ -82,17 +82,17 @@ const getApiComputers = async (x) => {
         ? p.attributes[0].value_name
         : "Marca desconocida",
       model: p.attributes
-        ? p.attributes.filter((a) => a.id === "MODEL")[0].values[0].name
+        ? p.attributes.filter((a) => a.id === "MODEL")[0]?.values[0]?.name
         : "Campo incompleto",
       description: p.attributes.filter((a) => a.id === "PROCESSOR_MODEL")[0]
         ? p.attributes.filter((a) => a.id === "PROCESSOR_MODEL")[0].name +
           ": " +
-          p.attributes.filter((a) => a.id === "PROCESSOR_MODEL")[0].value_name
+          p.attributes.filter((a) => a.id === "PROCESSOR_MODEL")[0]?.value_name
         : "Campo incompleto",
       condition:
         p.attributes.filter((a) => a.id === "ITEM_CONDITION") &&
         p.attributes.filter((a) => a.id === "ITEM_CONDITION")
-          ? p.attributes.filter((a) => a.id === "ITEM_CONDITION")[0].value_name
+          ? p.attributes.filter((a) => a.id === "ITEM_CONDITION")[0]?.value_name
           : "Campo incompleto",
       categories: ["computadoras"],
     }));

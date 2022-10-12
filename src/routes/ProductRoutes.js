@@ -236,7 +236,18 @@ router.get("/ID/:id", async (req, res) => {
     const product = await Product.findByPk(id, {
       include: { model: Category, through: { attributes: [] } },
     });
-    res.send(product);
+    // aca meti la mano Borrar luego
+    const suggested = await Product.findAll({
+      where: {
+        brand: product.brand
+      },
+      limit: 10,
+      raw: true
+    })
+    res.send({
+      product,
+      suggested
+    });
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

@@ -7,6 +7,9 @@ const adminCheck = require("./middleware/adminCheck");
 const JWT = require("jsonwebtoken");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
+//
+const crypto = require('crypto');
+const nodemailer = require('nodemailer')
 
 router.post("/signup", async (req, res) => {
   const {
