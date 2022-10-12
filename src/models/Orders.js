@@ -18,8 +18,14 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("Pending", "Cancelled", "InDelivery", "Delivered"),
-        defaultValue: "Pending",
+        type: DataTypes.ENUM(
+          "PaymentPending",
+          "PaidPendingDelivery",
+          "Cancelled",
+          "InDelivery",
+          "Delivered"
+        ),
+        defaultValue: "PaymentPending",
         allowNull: true,
       },
       amount: {

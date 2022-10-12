@@ -5,6 +5,7 @@ const router = Router();
 
 const { BACK_URL, FRONT_URL } = require("../constantes");
 const bodyParser = require("body-parser");
+const { default: axios } = require("axios");
 
 const { STRIPE_PRIVATE_KEY } = process.env;
 const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
@@ -12,8 +13,16 @@ const { endpointSecret } = process.env;
 
 module.exports = router;
 
-const fulfillOrder = (session) => {
-  console.log(session);
+const fulfillOrder = async (session) => {
+  const { orderNumber } = session.metadata;
+  try {
+    axios.put(`${BACK_URL}/order/change`, {
+      orderNumber,
+      newStatus: "PaidPendingDelivery",
+    });
+  } catch (err) {
+    console.log({ error: err.message });
+  }
 };
 
 router.post("/checkout", async (req, res) => {
@@ -80,7 +89,7 @@ router.post("/checkout", async (req, res) => {
   }
 });
 
-router.post("/webhook", (request, response) => {
+router.post("/webhook", async (request, response) => {
   const payload = request.body;
   const sig = request.headers["stripe-signature"];
 
@@ -98,12 +107,10 @@ router.post("/webhook", (request, response) => {
 
     if (session.payment_status === "paid") {
       // Fulfill the purchase...
-      console.log("2");
 
-      fulfillOrder(session);
+      await fulfillOrder(session);
     }
   }
-  console.log("1");
 
   response.status(200);
 });
