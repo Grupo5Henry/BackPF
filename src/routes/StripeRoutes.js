@@ -76,30 +76,26 @@ router.post("/checkout", async (req, res) => {
   }
 });
 
-router.post(
-  "/webhook",
-  bodyParser.raw({ type: "application/json" }),
-  (request, response) => {
-    console.log(request);
-    const payload = request.rawBody;
-    const sig = request.headers["stripe-signature"];
+router.post("/webhook", (request, response) => {
+  console.log(request.body);
+  const payload = request.rawBody;
+  const sig = request.headers["stripe-signature"];
 
-    let event;
+  let event;
 
-    try {
-      event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
-    } catch (err) {
-      console.log({ error: err.message });
-      return response.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-
-      // Fulfill the purchase...
-      console.log(session);
-    }
-
-    response.status(200);
+  try {
+    event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+  } catch (err) {
+    console.log({ error: err.message });
+    return response.status(400).send(`Webhook Error: ${err.message}`);
   }
-);
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+
+    // Fulfill the purchase...
+    console.log(session);
+  }
+
+  response.status(200);
+});
