@@ -24,7 +24,7 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  for (let product of cart) {
+  for (let product of line_items) {
     try {
       //   await Product.update(
       //     {
