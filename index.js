@@ -19,15 +19,18 @@ conn
 const superAdmin = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  await conn.models.User.findOrCreate({
-    role: "admin",
-    userName: "owner",
-    email: "null@null.null",
-    password: hashedPassword,
-    defaultShippingAddress: "none",
-    billingAddress: "none",
-    verified: true,
-  });
+  await conn.models.User.findOrCreate(
+    {
+      role: "admin",
+      userName: "owner",
+      email: "null@null.null",
+      password: hashedPassword,
+      defaultShippingAddress: "none",
+      billingAddress: "none",
+      verified: true,
+    },
+    { where: { userName: "owner" } }
+  );
 };
 
 superAdmin("123");
