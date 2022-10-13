@@ -14,6 +14,7 @@ const { endpointSecret } = process.env;
 module.exports = router;
 
 const fulfillOrder = async (session) => {
+  const { line_items } = session;
   const { orderNumber } = session.metadata;
   try {
     axios.put(`${BACK_URL}/order/change`, {
@@ -23,18 +24,22 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  //   for (let product of cart) {
-  //     try {
-  //       await Product.update(
-  //         {
-  //           stock: product.amount,
-  //         },
-  //         { where: { id: product.id } }
-  //       );
-  //     } catch (err) {
-  //       console.log({ error: err.message });
-  //     }
-  //   }
+  for (let product of cart) {
+    try {
+      //   await Product.update(
+      //     {
+      //       stock: product.amount,
+      //     },
+      //     { where: { id: product.id } }
+      //   );
+      console.log(product);
+      console.log(product.price_data, "priceData");
+      console.log(product.price_data.product_data, "productData");
+      console.log(product.price_data.product_data.metada.id, "productId");
+    } catch (err) {
+      console.log({ error: err.message });
+    }
+  }
 };
 
 const cancelOrder = async (session) => {
@@ -103,6 +108,7 @@ router.post("/checkout", async (req, res) => {
             currency: "usd",
             product_data: {
               name: product.product.name,
+              metadata: { id: product.product.id },
             },
             unit_amount: price.dataValues.price * 100,
           },
