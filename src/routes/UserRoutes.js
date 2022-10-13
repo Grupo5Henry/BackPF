@@ -72,6 +72,7 @@ router.post("/signup", async (req, res) => {
       userName,
       role: role,
       defaultShippingAddress: defaultShippingAddress,
+      billingAddress: billingAddress, //esto se debe descartar
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -144,6 +145,7 @@ router.post("/login", async (req, res) => {
       userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
+      billingAddress: user.billingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -152,7 +154,9 @@ router.post("/login", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: { userName: { [Op.not]: "owner" } },
+    });
     return res.send(users);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -174,6 +178,7 @@ router.get("/userAddress", async (req, res) => {
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
 router.put("/modify", adminCheck, async (req, res) => {
+  if (req.userName === "owner") return res.send("Cant modify owner account");
   if (req.role == "admin" || req.role == "superAdmin") {
     let {
       role,
@@ -227,14 +232,14 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
-router.put("/newShippingAddress", async (req, res) => {
+router.put("/newAddress", async (req, res) => {
   try {
-    var { defaultShippingAddress, userName } = req.body;
-    var user = await conn.models.User.findByPk(userName);
-    await conn.models.User.update(
+    var { defaultShippingAddress, billingAddress, userName } = req.body;
+    // var user = await conn.models.User.findByPk(userName);
+    await User.update(
       {
-        ...user,
         defaultShippingAddress,
+        billingAddress,
       },
       {
         where: {
@@ -242,7 +247,7 @@ router.put("/newShippingAddress", async (req, res) => {
         },
       }
     );
-    res.send("Default shipping address update");
+    res.send("Default address updated");
   } catch (error) {
     res.send(error);
   }

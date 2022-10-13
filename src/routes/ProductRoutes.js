@@ -30,6 +30,7 @@ router.post("/create", async (req, res) => {
     price,
     condition,
     categories,
+    photos,
     stock,
   } = req.body;
   // console.log(req.body);
@@ -51,6 +52,15 @@ router.post("/create", async (req, res) => {
 
       await newProduct.setCategories(categories);
     }
+    if (photos.length) {
+      for (let photo of photos) {
+        try {
+          newProduct.createImage({ image: photo });
+        } catch (err) {
+          console.log({ error: err.message });
+        }
+      }
+    }
     res.send(newProduct);
   } catch (err) {
     // console.log(err);
@@ -71,6 +81,8 @@ router.put("/modify", async (req, res) => {
     condition,
     price,
     stock,
+    categories,
+    photos,
   } = req.body;
   // console.log(req.body)
   try {
@@ -80,6 +92,22 @@ router.put("/modify", async (req, res) => {
         where: { id: id },
       }
     );
+    const product = await Product.findByPk(id);
+
+    if (categories.length) {
+      await product.setCategories(categories);
+    }
+    if (photos.length) {
+      product.setImages([]);
+      for (let photo of photos) {
+        try {
+          product.createImage({ image: photo });
+        } catch (err) {
+          console.log({ error: err.message });
+        }
+      }
+    }
+
     return res.send("Producto modificado");
   } catch (err) {
     return res.status(400).send({ error: err.message });

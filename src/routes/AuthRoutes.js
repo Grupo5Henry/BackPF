@@ -42,6 +42,7 @@ router.get("/login/success", async (req, res) => {
       user: req.user,
       shipping: usuario[0].defaultShippingAddress,
       role: usuario[0].role,
+      billingAddress:usuario[0].billingAddress
 
       /* cookies: req.cookies */
     });
