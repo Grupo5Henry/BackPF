@@ -14,7 +14,6 @@ const { endpointSecret } = process.env;
 module.exports = router;
 
 const fulfillOrder = async (session) => {
-  const { id } = session;
   const { orderNumber } = session.metadata;
   try {
     axios.put(`${BACK_URL}/order/change`, {
@@ -24,15 +23,8 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  try {
-    const session = await stripe.checkout.sessions.listLineItems(id);
-    console.log(session);
-    console.log(session.price);
-  } catch (err) {
-    console.log(err);
-  }
 
-  console.log(session);
+  console.log(session.metadata);
   //   for (let product of line_items) {
   //     try {
   //       //   await Product.update(
@@ -76,35 +68,7 @@ const cancelOrder = async (session) => {
 };
 
 router.post("/checkout", async (req, res) => {
-  const { cart, productId, orderNumber, userName } = req.body;
-
-  //   if (!cart) {
-  //     try {
-  //       const item = await Product.findByPk(productId);
-
-  //       let line_item = {
-  //         price_data: {
-  //           currency: "usd",
-  //           product_data: {
-  //             name: item.dataValues.name,
-  //           },
-  //           unit_amount: item.dataValues.price * 100,
-  //         },
-  //         quantity: 1,
-  //       };
-  //       const session = await stripe.checkout.sessions.create({
-  //         payment_method_types: ["card"],
-  //         mode: "payment",
-  //         line_items: [line_item],
-  //         success_url: `${FRONT_URL}/congrats?success=true`,
-  //         cancel_url: `${FRONT_URL}/home/detail/${productId}`,
-  //       });
-
-  //       return res.json({ url: session.url, sessioId: session });
-  //     } catch (err) {
-  //       return res.status(500).send({ error: err.message });
-  //     }
-  //   }
+  const { cart, orderNumber, userName } = req.body;
 
   try {
     const line_items = await Promise.all(
@@ -125,13 +89,16 @@ router.post("/checkout", async (req, res) => {
         };
       })
     );
+    let sessionCart = cart.map((product) => {
+      return { [product.productId]: product.amount };
+    });
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       line_items: line_items,
       success_url: `${FRONT_URL}/congrats`,
       cancel_url: `${FRONT_URL}/cart`,
-      metadata: { orderNumber, userName },
+      metadata: { orderNumber, userName, ...sessionCart },
     });
     // console.log(session.url);
     try {
