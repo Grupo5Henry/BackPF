@@ -47,7 +47,7 @@ router.get("/", async (req, res) => {
 });
 
 router.put("/change", async (req, res) => {
-  const { orderNumber, newStatus } = req.body;
+  const { orderNumber, newStatus, url } = req.body;
   try {
     const result = await Order.findAll({
       where: {
@@ -55,7 +55,8 @@ router.put("/change", async (req, res) => {
       },
     });
     result.forEach((element) => {
-      element.status = newStatus;
+      newStatus ? (element.status = newStatus) : null;
+      url ? (element.url = url) : null;
       element.save();
     });
     res.send("Elemeto modificado");
@@ -67,7 +68,7 @@ router.put("/change", async (req, res) => {
 router.post("/", async (req, res) => {
   const { productId, userName, orderNumber, shippingAddress, status, amount } =
     req.body;
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const order = await Order.create({
       productId,

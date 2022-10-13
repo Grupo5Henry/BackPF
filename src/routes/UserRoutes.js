@@ -38,9 +38,9 @@ router.post("/signup", async (req, res) => {
 
     // Hash password before saving to database
     const salt = await bcrypt.genSalt(10);
-    console.log("salt:", salt);
+    // console.log("salt:", salt);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("hashed password:", hashedPassword);
+    // console.log("hashed password:", hashedPassword);
 
     const newUser = await User.create({
       role,
@@ -65,7 +65,7 @@ router.post("/signup", async (req, res) => {
         expiresIn: "4200s",
       }
     );
-    console.log(accessToken, refreshToken);
+    // console.log(accessToken, refreshToken);
     res.json({
       accessToken,
       refreshToken,
@@ -229,14 +229,14 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
-router.put("/newShippingAddress", async (req, res) => {
+router.put("/newAddress", async (req, res) => {
   try {
-    var { defaultShippingAddress, userName } = req.body;
-    var user = await conn.models.User.findByPk(userName);
-    await conn.models.User.update(
+    var { defaultShippingAddress, billingAddress, userName } = req.body;
+    // var user = await conn.models.User.findByPk(userName);
+    await User.update(
       {
-        ...user,
         defaultShippingAddress,
+        billingAddress,
       },
       {
         where: {
@@ -244,7 +244,7 @@ router.put("/newShippingAddress", async (req, res) => {
         },
       }
     );
-    res.send("Default shipping address update");
+    res.send("Default address updated");
   } catch (error) {
     res.send(error);
   }

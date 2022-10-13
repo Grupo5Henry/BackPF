@@ -18,9 +18,20 @@ const server = express();
 
 server.name = "API";
 
-server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-server.use(bodyParser.json({ limit: "50mb" }));
+
+server.use("/stripe/webhook", express.raw({ type: "*/*" }));
+// server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+// server.use(bodyParser.json({ limit: "50mb" }));
+server.use((req, res, next) => {
+  if (req.originalUrl === "/stripe/webhook") {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next); // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
+
 server.use(cookieParser('estoesunsecreto'));
+
 server.use(morgan("dev"));
 
 //////////PASSPORT ojo que hay un import de cors mas arriba
