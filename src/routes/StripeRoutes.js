@@ -55,7 +55,7 @@ const cancelOrder = async (session) => {
       try {
         await Product.update(
           {
-            stock: 80,
+            stock: +amount,
           },
           { where: { id: productId } }
         );
