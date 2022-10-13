@@ -68,8 +68,9 @@ router.put("/modify", async (req, res) => {
 router.delete("/delete", async (req, res) => {
   const { userName, productId } = req.body;
   try {
-    const cart = await Cart.findOne({ userName, productId });
-    cart.destroy();
+       await Cart.destroy({ 
+        where: {userName, productId} 
+      });
     res.send("Eliminated");
   } catch (err) {
     res.status(500).send({ error: err.message });
