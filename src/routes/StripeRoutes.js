@@ -89,9 +89,8 @@ router.post("/checkout", async (req, res) => {
         };
       })
     );
-    let sessionCart = cart.map((product) => {
-      return { [product.productId]: product.amount };
-    });
+    let sessionCart = {};
+    cart.map((product) => (sessionCart[product.productId] = product.amount));
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
