@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const Reviews = require("./models/Reviews");
 const { DATABASE_URL } = process.env;
+const bcrypt = require("bcrypt");
 
 const sequelize = new Sequelize(DATABASE_URL, {
   logging: false, // set to console.log to see the raw SQL queries
@@ -121,6 +122,24 @@ Product.belongsToMany(User, {
 });
 Order.belongsTo(Product);
 Product.hasMany(Order);
+
+//SuperAdmin:
+
+const superAdmin = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  await User.create({
+    role: "admin",
+    userName: "owner",
+    email: "null@null.null",
+    password: hashedPassword,
+    defaultShippingAddress: "none",
+    billingAddress: "none",
+    verified: true,
+  });
+};
+
+superAdmin(123);
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
