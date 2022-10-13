@@ -24,22 +24,24 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  for (let product of line_items) {
-    try {
-      //   await Product.update(
-      //     {
-      //       stock: product.amount,
-      //     },
-      //     { where: { id: product.id } }
-      //   );
-      console.log(product);
-      console.log(product.price_data, "priceData");
-      console.log(product.price_data.product_data, "productData");
-      console.log(product.price_data.product_data.metada.id, "productId");
-    } catch (err) {
-      console.log({ error: err.message });
-    }
-  }
+
+  console.log(session);
+  //   for (let product of line_items) {
+  //     try {
+  //       //   await Product.update(
+  //       //     {
+  //       //       stock: product.amount,
+  //       //     },
+  //       //     { where: { id: product.id } }
+  //       //   );
+  //       console.log(product);
+  //       console.log(product.price_data, "priceData");
+  //       console.log(product.price_data.product_data, "productData");
+  //       console.log(product.price_data.product_data.metada.id, "productId");
+  //     } catch (err) {
+  //       console.log({ error: err.message });
+  //     }
+  //   }
 };
 
 const cancelOrder = async (session) => {
@@ -120,7 +122,7 @@ router.post("/checkout", async (req, res) => {
       payment_method_types: ["card"],
       mode: "payment",
       line_items: line_items,
-      success_url: `${FRONT_URL}/congrats?success=true`,
+      success_url: `${FRONT_URL}/congrats`,
       cancel_url: `${FRONT_URL}/cart`,
       metadata: { orderNumber, userName },
     });
