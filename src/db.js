@@ -139,7 +139,7 @@ const superAdmin = async (password) => {
   });
 };
 
-superAdmin(123);
+superAdmin("123");
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
