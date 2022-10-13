@@ -72,7 +72,7 @@ router.post("/signup", async (req, res) => {
       userName,
       role: role,
       defaultShippingAddress: defaultShippingAddress,
-      billingAddress: billingAddress //esto se debe descartar
+      billingAddress: billingAddress, //esto se debe descartar
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -145,7 +145,7 @@ router.post("/login", async (req, res) => {
       userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
-      billingAddress: user.billingAddress
+      billingAddress: user.billingAddress,
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -154,7 +154,9 @@ router.post("/login", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: { userName: { [Op.not]: "owner" } },
+    });
     return res.send(users);
   } catch (err) {
     res.status(500).send({ error: err.message });
