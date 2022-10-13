@@ -72,6 +72,7 @@ router.post("/signup", async (req, res) => {
       userName,
       role: role,
       defaultShippingAddress: defaultShippingAddress,
+      billingAddress: billingAddress //esto se debe descartar
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -144,6 +145,7 @@ router.post("/login", async (req, res) => {
       userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
+      billingAddress: user.billingAddress
     });
   } catch (err) {
     res.send({ error: err.message });
