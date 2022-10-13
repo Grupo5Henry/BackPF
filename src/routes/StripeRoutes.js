@@ -27,6 +27,7 @@ const fulfillOrder = async (session) => {
   try {
     const session = await stripe.checkout.sessions.listLineItems(id);
     console.log(session);
+    console.log(session.price);
   } catch (err) {
     console.log(err);
   }
