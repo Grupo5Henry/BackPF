@@ -43,7 +43,7 @@ const fulfillOrder = async (session) => {
 };
 
 const cancelOrder = async (session) => {
-  const { orderNumber, cart } = session.metadata;
+  const { orderNumber } = session.metadata;
   try {
     axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
@@ -52,18 +52,18 @@ const cancelOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  for (let product of cart) {
-    try {
-      await Product.update(
-        {
-          stock: +product.amount,
-        },
-        { where: { id: product.id } }
-      );
-    } catch (err) {
-      console.log({ error: err.message });
-    }
-  }
+  //   for (let product of cart) {
+  //     try {
+  //       await Product.update(
+  //         {
+  //           stock: +product.amount,
+  //         },
+  //         { where: { id: product.id } }
+  //       );
+  //     } catch (err) {
+  //       console.log({ error: err.message });
+  //     }
+  //   }
 };
 
 router.post("/checkout", async (req, res) => {
@@ -160,10 +160,7 @@ router.post("/webhook", async (request, response) => {
       // Fulfill the purchase...
 
       await fulfillOrder(session);
-    } else {
-      cancelOrder(session);
     }
   }
-
-  response.status(200);
+  if (event.type === "checkout.session.expired") response.status(200);
 });
