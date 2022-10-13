@@ -6,12 +6,32 @@ const JWT = require("jsonwebtoken");
 const authToken = require("./middleware/authenticateToken");
 
 router.get("/tokenCheck", authToken, async (req, res) => {
-  return res.status(200).send({
+
+
+  try{
+    const user = await User.findOne({
+      where: {
+        userName: req.userName,
+      },
+    })
+    return res.status(200).json({
+      userName: user.userName,
+      role: user.role,
+      defaultShippingAddress: user.defaultShippingAddress,
+      billingAddress: user.billingAddress
+    }); 
+
+  }catch (err) {
+    res.send({ error: err.message });
+
+  }});
+
+ /*  return res.status(200).send({
     userName: req.userName,
     defaultShippingAddress: req.defaultShippingAddress,
     role: req.role,
-  });
-});
+  }); */
+
 
 router.get("/tokenRefresh", authToken, async (req, res) => {
   try {
