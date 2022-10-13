@@ -27,8 +27,8 @@ const fulfillOrder = async (session) => {
     .filter(([key, _]) => key !== "orderNumber" || key !== "userName")
     .map(async ([productId, amount]) => {
       try {
-        await Product.update(
-          { stock: sequelize.literal("stock + 5") },
+        await Product.increment(
+          { stock: +amount },
           { where: { id: productId } }
         );
       } catch (err) {
