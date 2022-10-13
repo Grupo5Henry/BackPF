@@ -23,24 +23,20 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-
-  console.log(session.metadata);
-  //   for (let product of line_items) {
-  //     try {
-  //       //   await Product.update(
-  //       //     {
-  //       //       stock: product.amount,
-  //       //     },
-  //       //     { where: { id: product.id } }
-  //       //   );
-  //       console.log(product);
-  //       console.log(product.price_data, "priceData");
-  //       console.log(product.price_data.product_data, "productData");
-  //       console.log(product.price_data.product_data.metada.id, "productId");
-  //     } catch (err) {
-  //       console.log({ error: err.message });
-  //     }
-  //   }
+  Object.entries(session.metadata)
+    .filter(([key, _]) => key !== "orderNumber" || key !== "userName")
+    .map(async ([productId, amount]) => {
+      try {
+        await Product.update(
+          {
+            stock: 80,
+          },
+          { where: { id: productId } }
+        );
+      } catch (err) {
+        console.log({ error: err.message });
+      }
+    });
 };
 
 const cancelOrder = async (session) => {
