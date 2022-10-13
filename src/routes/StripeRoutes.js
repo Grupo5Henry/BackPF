@@ -23,18 +23,6 @@ const fulfillOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  Object.entries(session.metadata)
-    .filter(([key, _]) => key !== "orderNumber" || key !== "userName")
-    .map(async ([productId, amount]) => {
-      try {
-        await Product.increment(
-          { stock: +amount },
-          { where: { id: productId } }
-        );
-      } catch (err) {
-        console.log({ error: err.message });
-      }
-    });
 };
 
 const cancelOrder = async (session) => {
@@ -51,10 +39,8 @@ const cancelOrder = async (session) => {
     .filter(([key, _]) => key !== "orderNumber" || key !== "userName")
     .map(async ([productId, amount]) => {
       try {
-        await Product.update(
-          {
-            stock: +amount,
-          },
+        await Product.increment(
+          { stock: +amount },
           { where: { id: productId } }
         );
       } catch (err) {
@@ -133,5 +119,9 @@ router.post("/webhook", async (request, response) => {
       await fulfillOrder(session);
     }
   }
-  if (event.type === "checkout.session.expired") response.status(200);
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object;
+    cancelOrder(session);
+  }
+  response.status(200);
 });
