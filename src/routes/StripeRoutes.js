@@ -14,7 +14,7 @@ const { endpointSecret } = process.env;
 module.exports = router;
 
 const fulfillOrder = async (session) => {
-  const { line_items } = session;
+  const { id } = session;
   const { orderNumber } = session.metadata;
   try {
     axios.put(`${BACK_URL}/order/change`, {
@@ -23,6 +23,12 @@ const fulfillOrder = async (session) => {
     });
   } catch (err) {
     console.log({ error: err.message });
+  }
+  try {
+    const session = await stripe.checkout.sessions.listLineItems(id);
+    console.log(session);
+  } catch (err) {
+    console.log(err);
   }
 
   console.log(session);
