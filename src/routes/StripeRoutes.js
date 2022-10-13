@@ -53,18 +53,20 @@ const cancelOrder = async (session) => {
   } catch (err) {
     console.log({ error: err.message });
   }
-  //   for (let product of cart) {
-  //     try {
-  //       await Product.update(
-  //         {
-  //           stock: +product.amount,
-  //         },
-  //         { where: { id: product.id } }
-  //       );
-  //     } catch (err) {
-  //       console.log({ error: err.message });
-  //     }
-  //   }
+  Object.entries(session.metadata)
+    .filter(([key, _]) => key !== "orderNumber" || key !== "userName")
+    .map(async ([productId, amount]) => {
+      try {
+        await Product.update(
+          {
+            stock: +amount,
+          },
+          { where: { id: productId } }
+        );
+      } catch (err) {
+        console.log({ error: err.message });
+      }
+    });
 };
 
 router.post("/checkout", async (req, res) => {
