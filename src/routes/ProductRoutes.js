@@ -281,6 +281,28 @@ router.get("/ID/:id", async (req, res) => {
   }
 });
 
+
+router.get("/BRAND/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findByPk(id, {
+      include: { model: Category, through: { attributes: [] } },
+    });
+    // Traer productos con la marca parecida
+    const suggested = await Product.findAll({
+      where: {
+        brand: product.brand
+      },
+      limit: 10,
+      raw: true
+    })
+    res.send({
+      suggested
+    });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
 router.delete("/deleteCategory", async (req, res) => {
   const { id, categoryName } = req.body;
   try {
