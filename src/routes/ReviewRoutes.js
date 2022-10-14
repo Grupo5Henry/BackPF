@@ -20,7 +20,7 @@ router.post("/add", async (req, res) => {
   const { productId, userName, description, stars } = req.body;
   try {
     const user = await User.findByPk(userName);
-    if (user.mute) return res.send("User cant comment");
+    // if (user.mute) return res.send("User cant comment");
     const review = await Review.create({
       productId,
       userName,
