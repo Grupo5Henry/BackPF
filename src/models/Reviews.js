@@ -14,5 +14,9 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    flagged: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
 };

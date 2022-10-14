@@ -43,7 +43,7 @@ router.get("/ID/:id", async (req, res) => {
 
 router.get("/all", async (req, res) => {
   try {
-    const reviews = await Review.findAll();
+    const reviews = await Review.findAll({ where: { hidden: false } });
     res.send(reviews);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -75,6 +75,16 @@ router.put("/hideReview", async (req, res) => {
     review.update({ hidden: true });
     await review.save();
     res.send("Review hidden");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.put("hiddeAllFromUser", async (req, res) => {
+  const { userName } = req.body;
+  try {
+    Review.update({ hidden: true }, { where: { userName } });
+    res.send("User reviews hidden");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
