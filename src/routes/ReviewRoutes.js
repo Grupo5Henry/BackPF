@@ -34,7 +34,9 @@ router.post("/add", async (req, res) => {
 router.get("/ID/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const reviews = await Review.findAll({ where: { productId: id } });
+    const reviews = await Review.findAll({
+      where: { productId: id, hidden: false },
+    });
     res.send(reviews);
   } catch (err) {
     res.status(500).send({ error: err.message });
