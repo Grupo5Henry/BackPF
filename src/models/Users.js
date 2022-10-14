@@ -37,7 +37,11 @@ module.exports = (sequelize) => {
       defaultValue: false,
     },
     emailToken:{
-      type: DataTypes.STRING,
-    }
+      type: DataTypes.TEXT,
+    },
+    mute: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
 };

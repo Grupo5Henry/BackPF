@@ -14,14 +14,15 @@ router.get("/byOrderNumber", async (req, res) => {
   res.send(result);
 });
 
-// router.get('/group', async(req, res) =>{
-//     try{
-//         const result = await getGroupOrders()
-//         res.send(result)
-//     }catch(error){
-//         console.log(error)
-//     }
-// });
+router.get("/userName", async (req, res) => {
+  const { userName } = req.query;
+  try {
+    const result = await Order.findAll({ where: { userName } });
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 router.get("/largestOrderNumber", async (req, res) => {
   try {

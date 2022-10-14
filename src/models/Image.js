@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     "image",
     {
       image: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },
