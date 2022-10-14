@@ -32,5 +32,3 @@ const superAdmin = async (password) => {
     },
   });
 };
-
-superAdmin("123");
