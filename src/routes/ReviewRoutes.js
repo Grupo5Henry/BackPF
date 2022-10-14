@@ -66,7 +66,7 @@ router.put("/modify", async (req, res) => {
   }
 });
 
-router.put("hideAllFromUser", async (req, res) => {
+router.put("/hideAllFromUser", async (req, res) => {
   const { userName } = req.body;
   console.log("Hola");
   try {
