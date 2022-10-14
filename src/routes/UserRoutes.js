@@ -7,6 +7,23 @@ const adminCheck = require("./middleware/adminCheck");
 const JWT = require("jsonwebtoken");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto')
+const nodemailer = require ('nodemailer')
+const {
+  password
+} = process.env;
+// const verifyEmail = require('./middleware/loginCheck')
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user:'technotrade2022g5@gmail.com',
+    pass:password
+  },
+  tls:{
+    rejectUnauthorized: false
+  }
+})
 
 router.post("/signup", async (req, res) => {
   const {
@@ -49,7 +66,29 @@ router.post("/signup", async (req, res) => {
       password: hashedPassword,
       defaultShippingAddress,
       billingAddress,
+      emailToken: crypto.randomBytes(64).toString('hex'),
+      verified: false
     });
+    //enviar mensaje de verificacion 
+
+    var mailOptions = {
+      from: '"Verify your email" <technotrade2022g5@gmail.com>',
+      to: newUser.email,
+      subject: 'TechnoTrade -Verify your email',
+      html: `<h2>${newUser.userName}! Gracias por registrarse en nuestra web</h2>
+      <h4>Por favor verifica tu email para continuar</h4>
+      <a href="http://${req.headers.host}/user/verify-email?token=${newUser.emailToken}">Verifica tu email</a>
+      `
+    }
+    //Enviar mensajee
+    transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+        console.log(error)
+      }else{
+        console.log('Email de verificacion es enviado a tu correo')
+      }
+    })
+    ////////////////////////
     const accessToken = await JWT.sign(
       { userName, role, defaultShippingAddress },
       "ACCESS_TOKEN_SECRET",
@@ -79,6 +118,34 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+router.get('/verify-email', async(req, res) => {
+  try{
+    const token = req.query.token
+    const user = await User.findOne({
+      where: {
+        emailToken: token
+      }
+    
+    })
+    if(user){
+     
+      await user.update(
+        {
+          emailToken:null,
+          verified: true
+          
+        }
+      )
+      res.redirect(`${FRONT_URL}/home`)
+    }else{
+      res.redirect(`${FRONT_URL}/`)
+      console.log('email is not verified')
+    }
+  }catch(err){
+    console.log(err)
+  }
+
+}) 
 router.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
