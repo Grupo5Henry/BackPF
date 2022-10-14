@@ -157,7 +157,7 @@ router.post("/reviews", async (req, res) => {
 });
 
 router.post("/randomReviews", async (req, res) => {
-  const { amount } = req.query;
+  let { amount } = req.query;
   if (!amount) amount = 100;
   const reviews = [
     { description: "Pesimo", stars: 1 },

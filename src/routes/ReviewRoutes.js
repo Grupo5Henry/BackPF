@@ -80,6 +80,20 @@ router.put("/hideReview", async (req, res) => {
   }
 });
 
+router.put("/unflagReview", async (req, res) => {
+  const { productId, userName } = req.body;
+  try {
+    const review = await Review.findOne({
+      where: { productId: productId, userName: userName },
+    });
+    review.update({ hidden: false });
+    await review.save();
+    res.send("Review hidden");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 router.put("hiddeAllFromUser", async (req, res) => {
   const { userName } = req.body;
   try {
