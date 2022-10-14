@@ -15,7 +15,7 @@ router.get("/byOrderNumber", async (req, res) => {
 });
 
 router.get("/userName", async (req, res) => {
-  const { userName } = req.body;
+  const { userName } = req.query;
   try {
     const result = await Order.findAll({ where: { userName } });
     res.send(result);
