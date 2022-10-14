@@ -66,6 +66,17 @@ router.put("/modify", async (req, res) => {
   }
 });
 
+router.put("hideAllFromUser", async (req, res) => {
+  const { userName } = req.body;
+  console.log("Hola");
+  try {
+    Review.update({ hidden: true }, { where: { userName } });
+    res.send("User reviews hidden");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 router.put("/hideReview", async (req, res) => {
   const { productId, userName } = req.body;
   try {
@@ -89,17 +100,6 @@ router.put("/unflagReview", async (req, res) => {
     review.update({ flagged: false });
     await review.save();
     res.send("Review hidden");
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-});
-
-router.put("hideAllFromUser", async (req, res) => {
-  const { userName } = req.body;
-  console.log("Hola");
-  try {
-    Review.update({ hidden: true }, { where: { userName } });
-    res.send("User reviews hidden");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
