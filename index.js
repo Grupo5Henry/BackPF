@@ -5,16 +5,14 @@ const bcrypt = require("bcrypt");
 
 // Syncing all the models at once.
 
-conn
-  .sync({ force: true })
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log(`%s listening at ${PORT}`); // eslint-disable-line no-console
-    });
-  })
-  .then(() => {
-    superAdmin("123");
+conn.sync({ force: true }).then(() => {
+  server.listen(PORT, () => {
+    console.log(`%s listening at ${PORT}`); // eslint-disable-line no-console
   });
+});
+// .then(() => {
+//   superAdmin("123");
+// });
 
 const superAdmin = async (password) => {
   const salt = await bcrypt.genSalt(10);
