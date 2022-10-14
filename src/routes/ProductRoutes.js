@@ -273,7 +273,10 @@ router.get("/ID/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findByPk(id, {
-      include: { model: Category, through: { attributes: [] } },
+      include: [
+        { model: Category, through: { attributes: [] } },
+        { model: Image, through: { attributes: [] } },
+      ],
     });
     res.send(product);
   } catch (err) {
