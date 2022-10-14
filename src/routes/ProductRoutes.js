@@ -275,7 +275,7 @@ router.get("/ID/:id", async (req, res) => {
     const product = await Product.findByPk(id, {
       include: [
         { model: Category, through: { attributes: [] } },
-        { model: Image, through: { attributes: [] } },
+        // { model: Image, through: { attributes: [] } },
       ],
     });
     res.send(product);
