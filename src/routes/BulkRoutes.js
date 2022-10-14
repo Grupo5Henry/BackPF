@@ -172,6 +172,8 @@ router.post("/randomReviews", async (req, res) => {
     { description: "A mi hija le sirvio", stars: 4 },
     { description: "Excelente", stars: 5 },
     { description: "Mejor imposible", stars: 5 },
+    { description: "Una !?*/*!/¡¿*!", stars: 1, flagged: true },
+    { description: "Metetela donde no brilla el sol", stars: 1, flagged: true },
   ];
   // console.log(0)
   const users = await User.findAll({ attributes: ["userName"] });
