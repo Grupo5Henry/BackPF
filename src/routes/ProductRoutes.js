@@ -129,7 +129,7 @@ router.put("/hide", async (req, res) => {
 
 router.get("/Api", async (req, res) => {
   try {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 3; i++) {
       await getApiCellphones(i);
       await getApiComputers(i);
     }
@@ -281,7 +281,6 @@ router.get("/ID/:id", async (req, res) => {
   }
 });
 
-
 router.get("/BRAND/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -291,13 +290,13 @@ router.get("/BRAND/:id", async (req, res) => {
     // Traer productos con la marca parecida
     const suggested = await Product.findAll({
       where: {
-        brand: product.brand
+        brand: product.brand,
       },
       limit: 10,
-      raw: true
-    })
+      raw: true,
+    });
     res.send({
-      suggested
+      suggested,
     });
   } catch (err) {
     res.status(500).send({ error: err.message });

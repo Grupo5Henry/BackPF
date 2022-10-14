@@ -157,6 +157,8 @@ router.post("/reviews", async (req, res) => {
 });
 
 router.post("/randomReviews", async (req, res) => {
+  const { amount } = req.query;
+  if (!amount) amount = 100;
   const reviews = [
     { description: "Pesimo", stars: 1 },
     { description: "Un desastre", stars: 1 },
@@ -177,7 +179,7 @@ router.post("/randomReviews", async (req, res) => {
   // console.log(1)
   try {
     // console.log(2)
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < amount; i++) {
       let userName =
         users[Math.floor(Math.random() * users.length)].dataValues.userName;
       let id =
