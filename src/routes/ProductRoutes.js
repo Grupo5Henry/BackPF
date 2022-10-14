@@ -53,8 +53,10 @@ router.post("/create", async (req, res) => {
       await newProduct.setCategories(categories);
     }
     if (photos.length) {
+      console.log(photos);
       for (let photo of photos) {
         try {
+          console.log(photo);
           newProduct.createImage({ image: photo });
         } catch (err) {
           console.log({ error: err.message });
