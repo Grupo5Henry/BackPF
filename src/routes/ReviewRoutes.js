@@ -94,7 +94,7 @@ router.put("/unflagReview", async (req, res) => {
   }
 });
 
-router.put("hiddeAllFromUser", async (req, res) => {
+router.put("hideAllFromUser", async (req, res) => {
   const { userName } = req.body;
   try {
     Review.update({ hidden: true }, { where: { userName } });
