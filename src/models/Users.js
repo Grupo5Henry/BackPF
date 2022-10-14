@@ -22,11 +22,11 @@ module.exports = (sequelize) => {
     },
     defaultShippingAddress: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     billingAddress: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     banned: {
       type: DataTypes.BOOLEAN,
