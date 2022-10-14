@@ -86,7 +86,7 @@ router.put("/unflagReview", async (req, res) => {
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
-    review.update({ hidden: false });
+    review.update({ flagged: false });
     await review.save();
     res.send("Review hidden");
   } catch (err) {
