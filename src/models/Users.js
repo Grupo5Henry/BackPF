@@ -36,9 +36,9 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    mute: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
+    // mute: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false,
+    // },
   });
 };

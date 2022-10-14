@@ -29,7 +29,6 @@ const superAdmin = async (password) => {
       defaultShippingAddress: "none",
       billingAddress: "none",
       verified: true,
-      mute: false,
     },
   });
 };
