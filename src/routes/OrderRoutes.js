@@ -6,6 +6,7 @@ const {
   getAllOrders,
   getGroupOrders,
 } = require("../controllers/controllersOrder");
+const adminCheck = require("./middleware/adminCheck");
 
 router.get("/byOrderNumber", async (req, res) => {
   // numero de orden
@@ -38,7 +39,7 @@ router.get("/largestOrderNumber", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", adminCheck, async (req, res) => {
   try {
     const result = await getAllOrders();
     res.send(result);
