@@ -18,7 +18,10 @@ router.get("/byOrderNumber", async (req, res) => {
 router.get("/userName", async (req, res) => {
   const { userName } = req.query;
   try {
-    const result = await Order.findAll({ where: { userName } });
+    const result = await Order.findAll({
+      include: { model: Product },
+      where: { userName },
+    });
     res.send(result);
   } catch (error) {
     console.log(error);
