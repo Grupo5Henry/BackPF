@@ -67,7 +67,8 @@ router.post("/signup", async (req, res) => {
       defaultShippingAddress,
       billingAddress,
       emailToken: crypto.randomBytes(64).toString('hex'),
-      verified: false
+      verified: false,
+      mute:false
     });
     //enviar mensaje de verificacion 
 
@@ -112,6 +113,8 @@ router.post("/signup", async (req, res) => {
       role: role,
       defaultShippingAddress: defaultShippingAddress,
       billingAddress: billingAddress, //esto se debe descartar
+      verified: false,
+      mute: false
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -213,6 +216,8 @@ router.post("/login", async (req, res) => {
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
       billingAddress: user.billingAddress,
+      veryfied:user.verified,
+      mute: user.mute
     });
   } catch (err) {
     res.send({ error: err.message });
@@ -255,6 +260,8 @@ router.put("/modify", adminCheck, async (req, res) => {
       defaultShippingAddress,
       billingAddress,
       banned,
+      verified,
+      mute
     } = req.body;
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -270,6 +277,8 @@ router.put("/modify", adminCheck, async (req, res) => {
           defaultShippingAddress,
           billingAddress,
           banned,
+          verified,
+          mute
         },
         {
           where: { userName: userName },

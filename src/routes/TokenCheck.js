@@ -18,7 +18,9 @@ router.get("/tokenCheck", authToken, async (req, res) => {
       userName: user.userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
-      billingAddress: user.billingAddress
+      billingAddress: user.billingAddress,
+      verified: user.verified,
+      mute: user.mute
     }); 
 
   }catch (err) {
@@ -63,6 +65,8 @@ router.get("/tokenRefresh", authToken, async (req, res) => {
       userName: user.userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
+      verified: user.verified,
+      mute: user.mute
     });
   } catch (err) {
     res.send({ error: err.message });
