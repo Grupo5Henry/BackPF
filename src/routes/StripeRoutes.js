@@ -31,7 +31,6 @@ const cancelOrder = async (session) => {
     await axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
       newStatus: "Cancelled",
-      hidden: true,
     });
   } catch (err) {
     console.log({ error: err.message });
