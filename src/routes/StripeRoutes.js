@@ -28,7 +28,7 @@ const fulfillOrder = async (session) => {
 const cancelOrder = async (session) => {
   const { orderNumber } = session.metadata;
   try {
-    axios.put(`${BACK_URL}/order/change`, {
+    await axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
       newStatus: "Cancelled",
     });
@@ -46,7 +46,9 @@ const cancelOrder = async (session) => {
       } catch (err) {
         console.log({ error: err.message });
       }
+      return [productId, amount];
     });
+  return;
 };
 
 router.post("/checkout", async (req, res) => {
