@@ -20,7 +20,7 @@ router.get("/userName", async (req, res) => {
   try {
     const result = await Order.findAll({
       include: { model: Product },
-      where: { userName },
+      where: { userName, hidden: false },
     });
     res.send(result);
   } catch (error) {
@@ -52,7 +52,7 @@ router.get("/", adminCheck, async (req, res) => {
 });
 
 router.put("/change", async (req, res) => {
-  const { orderNumber, newStatus, sessionId } = req.body;
+  const { orderNumber, newStatus, sessionId, hidden } = req.body;
   try {
     const result = await Order.findAll({
       where: {
@@ -62,6 +62,7 @@ router.put("/change", async (req, res) => {
     result.forEach((element) => {
       newStatus ? (element.status = newStatus) : null;
       sessionId ? (element.sessionId = sessionId) : null;
+      hidden != undefined ? (element.hidden = hidden) : null;
       element.save();
     });
     res.send("Elemeto modificado");
