@@ -62,7 +62,6 @@ router.put("/change", async (req, res) => {
     result.forEach((element) => {
       newStatus ? (element.status = newStatus) : null;
       sessionId ? (element.sessionId = sessionId) : null;
-      hidden != undefined ? (element.hidden = hidden) : null;
       element.save();
     });
     res.send("Elemeto modificado");
