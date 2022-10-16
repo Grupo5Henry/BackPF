@@ -19,6 +19,7 @@ const fulfillOrder = async (session) => {
     axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
       newStatus: "PaidPendingDelivery",
+      sessionId: 1,
     });
   } catch (err) {
     console.log({ error: err.message });
