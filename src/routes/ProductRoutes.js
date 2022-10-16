@@ -297,7 +297,7 @@ router.get("/BRAND/:id", async (req, res) => {
       where: {
         brand: product.brand,
       },
-      limit: 10,
+      limit: 5,
       raw: true,
     });
     res.send({
