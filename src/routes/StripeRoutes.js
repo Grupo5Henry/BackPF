@@ -128,7 +128,7 @@ router.post("/webhook", async (request, response) => {
   response.status(200);
 });
 
-router.get("/retrieve", async (req, res) => {
+router.post("/retrieve", async (req, res) => {
   const { id } = req.body;
   try {
     const session = await stripe.checkout.sessions.retrieve(id);
@@ -138,7 +138,7 @@ router.get("/retrieve", async (req, res) => {
   }
 });
 
-router.post("/retrieve", async (req, res) => {
+router.post("/expire", async (req, res) => {
   const { id } = req.body;
   try {
     const session = await stripe.checkout.sessions.expire(id);
