@@ -80,7 +80,7 @@ router.post("/checkout", async (req, res) => {
       mode: "payment",
       line_items: line_items,
       success_url: `${FRONT_URL}/congrats`,
-      cancel_url: `${FRONT_URL}/cart`,
+      cancel_url: `${FRONT_URL}/profile`,
       metadata: { orderNumber, userName, ...sessionCart },
     });
     // console.log(session.url);
