@@ -87,7 +87,7 @@ router.post("/checkout", async (req, res) => {
     try {
       axios.put(`${BACK_URL}/order/change`, {
         orderNumber,
-        url: session.url,
+        sessionId: session.id,
       });
     } catch (err) {
       console.log({ error: err.message });
@@ -126,4 +126,24 @@ router.post("/webhook", async (request, response) => {
     cancelOrder(session);
   }
   response.status(200);
+});
+
+router.get("/retrieve", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(id);
+    res.send(session.url);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.post("/retrieve", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.expire(id);
+    res.send("Session expired");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
 });
