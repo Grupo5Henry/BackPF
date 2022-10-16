@@ -52,7 +52,7 @@ router.get("/", adminCheck, async (req, res) => {
 });
 
 router.put("/change", async (req, res) => {
-  const { orderNumber, newStatus, sessionId, hidden } = req.body;
+  const { orderNumber, newStatus, sessionId } = req.body;
   try {
     const result = await Order.findAll({
       where: {
@@ -64,6 +64,7 @@ router.put("/change", async (req, res) => {
       sessionId ? (element.sessionId = sessionId) : null;
       element.save();
     });
+    console.log("aqui");
     res.send("Elemeto modificado");
   } catch (error) {
     console.log(error);

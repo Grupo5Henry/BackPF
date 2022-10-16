@@ -48,7 +48,7 @@ const cancelOrder = async (session) => {
       }
       return [productId, amount];
     });
-  return;
+  return true;
 };
 
 router.post("/checkout", async (req, res) => {
@@ -125,6 +125,7 @@ router.post("/webhook", async (request, response) => {
     const session = event.data.object;
     cancelOrder(session);
   }
+  console.log("aca");
   response.status(200);
 });
 
