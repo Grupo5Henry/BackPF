@@ -115,6 +115,7 @@ router.put("/flagReview", async (req, res) => {
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
+    console.log(review);
     review.flagged = true;
     await review.save();
     res.send("Review flagged");
