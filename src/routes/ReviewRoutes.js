@@ -112,6 +112,7 @@ router.put("/unflagReview", async (req, res) => {
 router.put("/flagReview", async (req, res) => {
   const { productId, userName } = req.body;
   try {
+    console.log(productId, userName);
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
