@@ -326,6 +326,7 @@ router.get("/getRecomendedForHome", async (req, res) => {
       limit: 10,
       where: { sold: { [Op.gt]: 0 } },
     });
+    console.log(suggested);
     res.send(suggested);
   } catch (err) {
     res.status(500).send({ error: err.message });
