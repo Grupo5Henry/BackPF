@@ -21,6 +21,7 @@ router.get("/userName", async (req, res) => {
     const result = await Order.findAll({
       include: { model: Product },
       where: { userName },
+      order: [["orderNumber", "ASC"]],
     });
     res.send(result);
   } catch (error) {
@@ -52,7 +53,7 @@ router.get("/", adminCheck, async (req, res) => {
 });
 
 router.put("/change", async (req, res) => {
-  const { orderNumber, newStatus, url } = req.body;
+  const { orderNumber, newStatus, sessionId } = req.body;
   try {
     const result = await Order.findAll({
       where: {
@@ -61,9 +62,10 @@ router.put("/change", async (req, res) => {
     });
     result.forEach((element) => {
       newStatus ? (element.status = newStatus) : null;
-      url ? (element.url = url) : null;
+      sessionId ? (element.sessionId = sessionId) : null;
       element.save();
     });
+    console.log("aqui");
     res.send("Elemeto modificado");
   } catch (error) {
     console.log(error);
@@ -83,6 +85,7 @@ router.post("/", async (req, res) => {
       status,
       amount,
     });
+    await Product.increment({ sold: +amount }, { where: { id: productId } });
     res.send(order);
   } catch (error) {
     console.log(error);

@@ -19,6 +19,7 @@ const fulfillOrder = async (session) => {
     axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
       newStatus: "PaidPendingDelivery",
+      sessionId: 1,
     });
   } catch (err) {
     console.log({ error: err.message });
@@ -28,7 +29,7 @@ const fulfillOrder = async (session) => {
 const cancelOrder = async (session) => {
   const { orderNumber } = session.metadata;
   try {
-    axios.put(`${BACK_URL}/order/change`, {
+    await axios.put(`${BACK_URL}/order/change`, {
       orderNumber,
       newStatus: "Cancelled",
     });
@@ -40,13 +41,15 @@ const cancelOrder = async (session) => {
     .map(async ([productId, amount]) => {
       try {
         await Product.increment(
-          { stock: +amount },
+          { stock: +amount, sold: -amount },
           { where: { id: productId } }
         );
       } catch (err) {
         console.log({ error: err.message });
       }
+      return [productId, amount];
     });
+  return true;
 };
 
 router.post("/checkout", async (req, res) => {
@@ -78,14 +81,14 @@ router.post("/checkout", async (req, res) => {
       mode: "payment",
       line_items: line_items,
       success_url: `${FRONT_URL}/congrats`,
-      cancel_url: `${FRONT_URL}/cart`,
+      cancel_url: `${FRONT_URL}/profile`,
       metadata: { orderNumber, userName, ...sessionCart },
     });
     // console.log(session.url);
     try {
       axios.put(`${BACK_URL}/order/change`, {
         orderNumber,
-        url: session.url,
+        sessionId: session.id,
       });
     } catch (err) {
       console.log({ error: err.message });
@@ -123,5 +126,26 @@ router.post("/webhook", async (request, response) => {
     const session = event.data.object;
     cancelOrder(session);
   }
+  console.log("aca");
   response.status(200);
+});
+
+router.post("/retrieve", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(id);
+    res.send(session.url);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.post("/expire", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.expire(id);
+    res.send("Session expired");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
 });

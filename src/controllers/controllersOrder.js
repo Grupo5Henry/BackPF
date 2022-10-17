@@ -6,6 +6,7 @@ const getAllOrders = async () => {
     include: {
       model: Product,
     },
+    order: [["orderNumber", "ASC"]],
   });
   return data;
 };

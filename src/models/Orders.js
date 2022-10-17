@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      url: {
+      sessionId: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
