@@ -321,10 +321,10 @@ router.delete("/deleteCategory", async (req, res) => {
 
 router.get("/getRecomendedForHome", async (req, res) => {
   try {
-    const suggested = Product.findAll({
+    const suggested = await Product.findAll({
+      where: { sold: { [Op.gt]: 0 } },
       order: [["sold", "DESC"]],
       limit: 10,
-      where: { sold: { [Op.gt]: 0 } },
     });
     console.log(suggested);
     res.send(suggested);
