@@ -321,7 +321,11 @@ router.delete("/deleteCategory", async (req, res) => {
 
 router.get("/getRecomendedForHome", async (req, res) => {
   try {
-    const suggested = Product.findAll({ order: [["sold", "DESC"]], limit: 10 });
+    const suggested = Product.findAll({
+      order: [["sold", "DESC"]],
+      limit: 10,
+      where: { sold: { [gt]: 0 } },
+    });
     res.send(suggested);
   } catch (err) {
     res.status(500).send({ error: err.message });
