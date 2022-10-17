@@ -324,7 +324,7 @@ router.get("/getRecomendedForHome", async (req, res) => {
     const suggested = Product.findAll({
       order: [["sold", "DESC"]],
       limit: 10,
-      where: { sold: { [gt]: 0 } },
+      where: { sold: { [Op.gt]: 0 } },
     });
     res.send(suggested);
   } catch (err) {
