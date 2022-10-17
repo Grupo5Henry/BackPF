@@ -41,7 +41,7 @@ const cancelOrder = async (session) => {
     .map(async ([productId, amount]) => {
       try {
         await Product.increment(
-          { stock: +amount },
+          { stock: +amount, sold: -amount },
           { where: { id: productId } }
         );
       } catch (err) {

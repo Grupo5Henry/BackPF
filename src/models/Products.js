@@ -44,6 +44,10 @@ module.exports = (sequelize) => {
       condition: {
         type: DataTypes.STRING,
       },
+      sold: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       timestamps: false,
