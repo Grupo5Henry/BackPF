@@ -101,9 +101,23 @@ router.put("/unflagReview", async (req, res) => {
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
-    review.update({ flagged: false });
+    review.flagged = false;
     await review.save();
-    res.send("Review hidden");
+    res.send("Review unflagged");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.put("/flagReview", async (req, res) => {
+  const { productId, userName } = req.body;
+  try {
+    const review = await Review.findOne({
+      where: { productId: productId, userName: userName },
+    });
+    review.flagged = true;
+    await review.save();
+    res.send("Review flagged");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

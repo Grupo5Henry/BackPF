@@ -85,6 +85,7 @@ router.post("/", async (req, res) => {
       status,
       amount,
     });
+    await Product.increment({ sold: +amount }, { where: { id: productId } });
     res.send(order);
   } catch (error) {
     console.log(error);

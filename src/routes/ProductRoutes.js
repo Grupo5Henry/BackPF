@@ -319,6 +319,20 @@ router.delete("/deleteCategory", async (req, res) => {
   }
 });
 
+router.get("/getRecomendedForHome", async (req, res) => {
+  try {
+    const suggested = await Product.findAll({
+      where: { sold: { [Op.gt]: 0 } },
+      order: [["sold", "DESC"]],
+      limit: 10,
+    });
+    console.log(suggested);
+    res.send(suggested);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 // Crear ruta para crear/agregar Producto listo
 //     Crear ruta para Modificar Producto listo
 //     Crear ruta para ocultar producto listo
