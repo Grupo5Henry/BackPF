@@ -101,7 +101,6 @@ router.put("/unflagReview", async (req, res) => {
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
-    console.log(review);
     review.flagged = false;
     await review.save();
     res.send("Review unflagged");
@@ -113,11 +112,9 @@ router.put("/unflagReview", async (req, res) => {
 router.put("/flagReview", async (req, res) => {
   const { productId, userName } = req.body;
   try {
-    console.log(productId, userName);
     const review = await Review.findOne({
       where: { productId: productId, userName: userName },
     });
-    console.log(review);
     review.flagged = true;
     await review.save();
     res.send("Review flagged");
