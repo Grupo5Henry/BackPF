@@ -80,7 +80,7 @@ router.post("/checkout", async (req, res) => {
       payment_method_types: ["card"],
       mode: "payment",
       line_items: line_items,
-      success_url: `${FRONT_URL}/congrats`,
+      success_url: `${FRONT_URL}/home`,
       cancel_url: `${FRONT_URL}/profile`,
       metadata: { orderNumber, userName, ...sessionCart },
     });
