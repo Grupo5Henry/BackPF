@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { User, Product } = require("../db");
-
+const nodemailer = require("nodemailer");
+const { password } = require("../constantes.js");
 const router = Router();
 
 const { BACK_URL, FRONT_URL } = require("../constantes");
@@ -10,8 +11,20 @@ const { default: axios } = require("axios");
 const { STRIPE_PRIVATE_KEY } = process.env;
 const stripe = require("stripe")(STRIPE_PRIVATE_KEY);
 const { endpointSecret } = process.env;
+const { newOrder } = require("../MailTemplates/NewOrder");
 
 module.exports = router;
+
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "technotrade2022g5@gmail.com",
+    pass: password,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 const fulfillOrder = async (session) => {
   const { orderNumber } = session.metadata;
@@ -93,6 +106,17 @@ router.post("/checkout", async (req, res) => {
     } catch (err) {
       console.log({ error: err.message });
     }
+
+    const user = await User.findByPk(userName);
+
+    const notice = newOrder(user.email);
+    transporter.sendMail(notice, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email de verificacion es enviado a tu correo");
+      }
+    });
     res.json({ url: session.url });
   } catch (err) {
     // console.log(err.message)
