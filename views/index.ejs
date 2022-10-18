@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+        var status = '<%- JSON.stringify(status) %>';
+        if(JSON.parse(status) == 'verificado'){
+            
+            if(confirm('¿Quieres continuar?')){
+                window.location.href = 'http://localhost:3001/'
+            }
+        }
+    </script>
+  </head>
+  <body>
+    <form action="" method="post">
+        <h4><%=email%></h4>
+      <div
+        className="min-h-screen bg-blue-400 flex justify-center items-center"
+      >
+        <div
+          className="absolute w-60 h-60 rounded-xl bg-blue-300 -top-5 -left-16 z-0 transform rotate-45 hidden md:block"
+        ></div>
+        <div
+          className="absolute w-48 h-48 rounded-xl bg-blue-300 -bottom-6 -right-10 transform rotate-12 hidden md:block"
+        ></div>
+        <div className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
+          <div>
+            <h1 className="text-3xl font-bold text-center mb-4 cursor-pointer">
+              Ingresa tu nueva contraseña
+            </h1>
+            <p
+              className="w-80  text-sm  font-semibold text-gray-700 tracking-wide "
+            >
+              Nueva contraseña
+            </p>
+          </div>
+          <div className="space-y-4">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Nueva contraseña"
+              className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+            />
+           
+          </div>
+          
+          <div className="text-center mt-6">
+            <button
+              className="py-3 w-64 text-xl text-white bg-blue-400 rounded-2xl"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+        <div
+          className="w-40 h-40 absolute bg-blue-300 rounded-full top-0 right-12 hidden md:block"
+        ></div>
+        <div
+          className="w-20 h-40 absolute bg-blue-300 rounded-full bottom-20 left-10 transform rotate-45 hidden md:block"
+        ></div>
+      </div>
+    </form>
+  </body>
+</html>
