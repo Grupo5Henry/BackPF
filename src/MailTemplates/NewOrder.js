@@ -1,4 +1,4 @@
-export const newOrder = (email) => {
+export default newOrder = (email) => {
   return {
     from: '"Recibimos tu orden" <technotrade2022g5@gmail.com>',
     to: email,
