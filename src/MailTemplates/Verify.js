@@ -1,4 +1,4 @@
-export const verify = {
+const verify = {
   from: '"Bienvenido a Techno trade" <technotrade2022g5@gmail.com>',
   to: newUser.email,
   subject: "TechnoTrade -Verify your email",
@@ -1023,4 +1023,8 @@ export const verify = {
     </body>
   </html>
   `,
+};
+
+module.exports = {
+  verify,
 };

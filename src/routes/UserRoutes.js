@@ -11,7 +11,8 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { password } = require("../constantes.js");
-import { verify } from "../MailTemplates/Verify";
+// import { verify } from "../MailTemplates/Verify";
+const { verify } = require("../MailTemplates/Verify");
 
 // const { password } = process.env;
 // const verifyEmail = require('./middleware/loginCheck')
