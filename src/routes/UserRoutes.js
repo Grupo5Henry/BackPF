@@ -235,7 +235,7 @@ router.post("/forgot-password", async (req, res) => {
         expiresIn: "5m",
       }
     );
-    const link = `${BACK_URL}/user/reset-password/${oldUser.userName}/${token}`;
+    const link = `${FRONT_URL}/resetPassword/${oldUser.userName}/${token}`
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -284,8 +284,9 @@ router.get("/reset-password/:userName/:token", async (req, res) => {
   const secret = "ACCESS_TOKEN_SECRET" + oldUser.password;
   try {
     const verify = JWT.verify(token, secret);
-    res.render("index", { email: verify.email, status: "No verificado" });
-    // res.send('verificado')
+    // res.render("index", { email: verify.email, status: "No verificado" });
+    res.status(201)
+
   } catch (err) {
     res.send("No verificado");
     console.log(err);
@@ -316,8 +317,9 @@ router.post("/reset-password/:userName/:token", async (req, res) => {
       password: encryptedPassword,
     });
     newPassword = await newPassword.save();
-    // res.json({status: "password updated"})
-    res.render("index", { email: verify.email, status: "verificado" });
+    // res.render("index", { email: verify.email, status: "verificado" });
+    res.status(201)
+
   } catch (err) {
     res.json({ status: "Algo salio mal" });
     console.log(err);
