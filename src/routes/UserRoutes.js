@@ -1,3 +1,4 @@
+const { FRONT_URL, BACK_URL } = require("../constantes.js");
 const { Router } = require("express");
 const { User, conn } = require("../db");
 const { Op, where } = require("sequelize");
@@ -7,6 +8,24 @@ const adminCheck = require("./middleware/adminCheck");
 const JWT = require("jsonwebtoken");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const { password } = require("../constantes.js");
+import { verify } from "../MailTemplates/Verify";
+
+// const { password } = process.env;
+// const verifyEmail = require('./middleware/loginCheck')
+
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "technotrade2022g5@gmail.com",
+    pass: password,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 router.post("/signup", async (req, res) => {
   const {
@@ -49,7 +68,21 @@ router.post("/signup", async (req, res) => {
       password: hashedPassword,
       defaultShippingAddress,
       billingAddress,
+      emailToken: crypto.randomBytes(64).toString("hex"),
+      verified: false,
+      mute: false,
     });
+    //enviar mensaje de verificacion
+
+    //Enviar mensajee
+    transporter.sendMail(verify, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email de verificacion es enviado a tu correo");
+      }
+    });
+    ////////////////////////
     const accessToken = await JWT.sign(
       { userName, role, defaultShippingAddress },
       "ACCESS_TOKEN_SECRET",
@@ -72,12 +105,37 @@ router.post("/signup", async (req, res) => {
       userName,
       role: role,
       defaultShippingAddress: defaultShippingAddress,
+      billingAddress: billingAddress, //esto se debe descartar
+      verified: false,
+      mute: false,
     });
   } catch (err) {
     res.send({ error: err.message });
   }
 });
 
+router.get("/verify-email", async (req, res) => {
+  try {
+    const token = req.query.token;
+    const user = await User.findOne({
+      where: {
+        emailToken: token,
+      },
+    });
+    if (user) {
+      await user.update({
+        emailToken: null,
+        verified: true,
+      });
+      res.redirect(`${FRONT_URL}/home`);
+    } else {
+      res.redirect(`${FRONT_URL}/`);
+      console.log("email is not verified");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 router.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
@@ -144,15 +202,132 @@ router.post("/login", async (req, res) => {
       userName,
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
+      billingAddress: user.billingAddress,
+      veryfied: user.verified,
+      mute: user.mute,
     });
   } catch (err) {
     res.send({ error: err.message });
   }
 });
 
+//Olvidar contraseña
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const oldUser = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!oldUser) {
+      return res.json({ status: "Usuario no existe" });
+    }
+    const secret = "ACCESS_TOKEN_SECRET" + oldUser.password;
+    const token = JWT.sign(
+      {
+        email: oldUser.email,
+        userName: oldUser.userName,
+      },
+      secret,
+      {
+        expiresIn: "5m",
+      }
+    );
+    const link = `${BACK_URL}/user/reset-password/${oldUser.userName}/${token}`;
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "technotrade2022g5@gmail.com",
+        pass: password,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+    var mailOptions = {
+      from: "technotrade2022g5@gmail.com",
+      to: oldUser.email,
+      subject: "Restaura tu contraseña",
+      html: `
+      <h4>Hola ${oldUser.userName} </h4>
+      <p>¿Olvidaste tu contraseña?</p>
+      <p>Recibimos una solicitud para restaurar tu contraseña, haz click en el siguiente enlace</p>
+      <p>${link}</p>`,
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Mensaje enviado" + info.response);
+      }
+    });
+    console.log(oldUser.userName);
+
+    console.log(link);
+  } catch (err) {
+    console.log(err);
+  }
+});
+router.get("/reset-password/:userName/:token", async (req, res) => {
+  const { userName, token } = req.params;
+  console.log(req.params);
+  const oldUser = await User.findOne({
+    where: {
+      userName: userName,
+    },
+  });
+  if (!oldUser) {
+    return res.json({ status: "Usuario no existe" });
+  }
+  const secret = "ACCESS_TOKEN_SECRET" + oldUser.password;
+  try {
+    const verify = JWT.verify(token, secret);
+    res.render("index", { email: verify.email, status: "No verificado" });
+    // res.send('verificado')
+  } catch (err) {
+    res.send("No verificado");
+    console.log(err);
+  }
+});
+
+router.post("/reset-password/:userName/:token", async (req, res) => {
+  const { userName, token } = req.params;
+  const { password } = req.body;
+  const oldUser = await User.findOne({
+    where: {
+      userName: userName,
+    },
+  });
+  if (!oldUser) {
+    return res.json({ status: "Usuario no existe" });
+  }
+  const secret = "ACCESS_TOKEN_SECRET" + oldUser.password;
+  try {
+    const verify = JWT.verify(token, secret);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    let newPassword = await User.findOne({
+      where: {
+        userName: userName,
+      },
+    });
+    newPassword.set({
+      password: encryptedPassword,
+    });
+    newPassword = await newPassword.save();
+    // res.json({status: "password updated"})
+    res.render("index", { email: verify.email, status: "verificado" });
+  } catch (err) {
+    res.json({ status: "Algo salio mal" });
+    console.log(err);
+  }
+});
 router.get("/", async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: { userName: { [Op.not]: "owner" } },
+    });
     return res.send(users);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -174,6 +349,7 @@ router.get("/userAddress", async (req, res) => {
 // Cualquier llamada a esta ruta no puede tener un valor como null
 // Puede tener valores que no se manden pero nunca que mandes {key: null}
 router.put("/modify", adminCheck, async (req, res) => {
+  if (req.userName === "owner") return res.send("Cant modify owner account");
   if (req.role == "admin" || req.role == "superAdmin") {
     let {
       role,
@@ -183,6 +359,8 @@ router.put("/modify", adminCheck, async (req, res) => {
       defaultShippingAddress,
       billingAddress,
       banned,
+      verified,
+      mute,
     } = req.body;
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -198,6 +376,8 @@ router.put("/modify", adminCheck, async (req, res) => {
           defaultShippingAddress,
           billingAddress,
           banned,
+          verified,
+          mute,
         },
         {
           where: { userName: userName },
@@ -227,14 +407,14 @@ router.put("/delete/:username", adminCheck, async (req, res) => {
   }
 });
 
-router.put("/newShippingAddress", async (req, res) => {
+router.put("/newAddress", async (req, res) => {
   try {
-    var { defaultShippingAddress, userName } = req.body;
-    var user = await conn.models.User.findByPk(userName);
-    await conn.models.User.update(
+    var { defaultShippingAddress, billingAddress, userName } = req.body;
+    // var user = await conn.models.User.findByPk(userName);
+    await User.update(
       {
-        ...user,
         defaultShippingAddress,
+        billingAddress,
       },
       {
         where: {
@@ -242,7 +422,7 @@ router.put("/newShippingAddress", async (req, res) => {
         },
       }
     );
-    res.send("Default shipping address update");
+    res.send("Default address updated");
   } catch (error) {
     res.send(error);
   }

@@ -4,8 +4,8 @@ module.exports = (sequelize) => {
   sequelize.define(
     "image",
     {
-      images: {
-        type: DataTypes.STRING,
+      image: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },

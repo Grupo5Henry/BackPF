@@ -22,17 +22,24 @@ module.exports = (sequelize) => {
     },
     defaultShippingAddress: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     billingAddress: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     banned: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    emailToken:{
+      type: DataTypes.TEXT,
+    },
+    mute: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

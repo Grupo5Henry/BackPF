@@ -30,6 +30,7 @@ router.post("/create", async (req, res) => {
     price,
     condition,
     categories,
+    photos,
     stock,
   } = req.body;
   // console.log(req.body);
@@ -51,6 +52,17 @@ router.post("/create", async (req, res) => {
 
       await newProduct.setCategories(categories);
     }
+    if (photos.length) {
+      console.log(photos);
+      for (let photo of photos) {
+        try {
+          console.log(photo);
+          newProduct.createImage({ image: photo });
+        } catch (err) {
+          console.log({ error: err.message });
+        }
+      }
+    }
     res.send(newProduct);
   } catch (err) {
     // console.log(err);
@@ -71,6 +83,8 @@ router.put("/modify", async (req, res) => {
     condition,
     price,
     stock,
+    categories,
+    photos,
   } = req.body;
   // console.log(req.body)
   try {
@@ -80,6 +94,22 @@ router.put("/modify", async (req, res) => {
         where: { id: id },
       }
     );
+    const product = await Product.findByPk(id);
+
+    if (categories.length) {
+      await product.setCategories(categories);
+    }
+    if (photos.length) {
+      product.setImages([]);
+      for (let photo of photos) {
+        try {
+          product.createImage({ image: photo });
+        } catch (err) {
+          console.log({ error: err.message });
+        }
+      }
+    }
+
     return res.send("Producto modificado");
   } catch (err) {
     return res.status(400).send({ error: err.message });
@@ -101,7 +131,7 @@ router.put("/hide", async (req, res) => {
 
 router.get("/Api", async (req, res) => {
   try {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 3; i++) {
       await getApiCellphones(i);
       await getApiComputers(i);
     }
@@ -245,7 +275,10 @@ router.get("/ID/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findByPk(id, {
-      include: { model: Category, through: { attributes: [] } },
+      include: [
+        { model: Category, through: { attributes: [] } },
+        { model: Image },
+      ],
     });
     res.send(product);
   } catch (err) {
@@ -253,6 +286,27 @@ router.get("/ID/:id", async (req, res) => {
   }
 });
 
+router.get("/BRAND/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findByPk(id, {
+      include: { model: Category, through: { attributes: [] } },
+    });
+    // Traer productos con la marca parecida
+    const suggested = await Product.findAll({
+      where: {
+        brand: product.brand,
+      },
+      limit: 5,
+      raw: true,
+    });
+    res.send({
+      suggested,
+    });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
 router.delete("/deleteCategory", async (req, res) => {
   const { id, categoryName } = req.body;
   try {
@@ -260,6 +314,20 @@ router.delete("/deleteCategory", async (req, res) => {
     const category = await Category.findByPk(categoryName);
     await product.removeCategory(category);
     res.send("Category removed from product");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.get("/getRecomendedForHome", async (req, res) => {
+  try {
+    const suggested = await Product.findAll({
+      where: { sold: { [Op.gt]: 0 } },
+      order: [["sold", "DESC"]],
+      limit: 10,
+    });
+    console.log(suggested);
+    res.send(suggested);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

@@ -21,7 +21,7 @@ router.get("/checkCookie", checkAuthenticated, (req, res) => {
 });
 
 router.get("/login/success", async (req, res) => {
-  console.log(req.session);
+  //console.log(req.session);
   if (req.user) {
     console.log("authroutes.js, req.user: ", req.user.id);
     const usuario = await User.findOrCreate({
@@ -33,6 +33,7 @@ router.get("/login/success", async (req, res) => {
         defaultShippingAddress: "from_google",
         billingAddress: "from_google",
         banned: false,
+        verified: false
       },
     });
     req.user.password = "";
@@ -42,6 +43,9 @@ router.get("/login/success", async (req, res) => {
       user: req.user,
       shipping: usuario[0].defaultShippingAddress,
       role: usuario[0].role,
+      billingAddress:usuario[0].billingAddress,
+      verified: usuario[0].verified,
+      mute: usuario[0].mute
 
       /* cookies: req.cookies */
     });

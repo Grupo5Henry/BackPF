@@ -6,6 +6,7 @@ const {
   getAllOrders,
   getGroupOrders,
 } = require("../controllers/controllersOrder");
+const adminCheck = require("./middleware/adminCheck");
 
 router.get("/byOrderNumber", async (req, res) => {
   // numero de orden
@@ -14,14 +15,19 @@ router.get("/byOrderNumber", async (req, res) => {
   res.send(result);
 });
 
-// router.get('/group', async(req, res) =>{
-//     try{
-//         const result = await getGroupOrders()
-//         res.send(result)
-//     }catch(error){
-//         console.log(error)
-//     }
-// });
+router.get("/userName", async (req, res) => {
+  const { userName } = req.query;
+  try {
+    const result = await Order.findAll({
+      include: { model: Product },
+      where: { userName },
+      order: [["orderNumber", "ASC"]],
+    });
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 router.get("/largestOrderNumber", async (req, res) => {
   try {
@@ -37,7 +43,7 @@ router.get("/largestOrderNumber", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", adminCheck, async (req, res) => {
   try {
     const result = await getAllOrders();
     res.send(result);
@@ -47,7 +53,7 @@ router.get("/", async (req, res) => {
 });
 
 router.put("/change", async (req, res) => {
-  const { orderNumber, newStatus } = req.body;
+  const { orderNumber, newStatus, sessionId } = req.body;
   try {
     const result = await Order.findAll({
       where: {
@@ -55,9 +61,11 @@ router.put("/change", async (req, res) => {
       },
     });
     result.forEach((element) => {
-      element.status = newStatus;
+      newStatus ? (element.status = newStatus) : null;
+      sessionId ? (element.sessionId = sessionId) : null;
       element.save();
     });
+    console.log("aqui");
     res.send("Elemeto modificado");
   } catch (error) {
     console.log(error);
@@ -77,6 +85,7 @@ router.post("/", async (req, res) => {
       status,
       amount,
     });
+    await Product.increment({ sold: +amount }, { where: { id: productId } });
     res.send(order);
   } catch (error) {
     console.log(error);
