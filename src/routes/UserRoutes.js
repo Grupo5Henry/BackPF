@@ -1230,7 +1230,7 @@ router.post("/login", async (req, res) => {
       role: user.role,
       defaultShippingAddress: user.defaultShippingAddress,
       billingAddress: user.billingAddress,
-      veryfied: user.verified,
+      verified: user.verified,
       mute: user.mute,
     });
   } catch (err) {
@@ -1262,7 +1262,7 @@ router.post("/forgot-password", async (req, res) => {
         expiresIn: "5m",
       }
     );
-    const link = `${FRONT_URL}/resetPassword/${oldUser.userName}/${token}`
+    const link = `${FRONT_URL}/resetPassword/${oldUser.userName}/${token}`;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -1312,8 +1312,7 @@ router.get("/reset-password/:userName/:token", async (req, res) => {
   try {
     const verify = JWT.verify(token, secret);
     // res.render("index", { email: verify.email, status: "No verificado" });
-    res.status(201)
-
+    res.status(201);
   } catch (err) {
     res.send("No verificado");
     console.log(err);
@@ -1345,8 +1344,7 @@ router.post("/reset-password/:userName/:token", async (req, res) => {
     });
     newPassword = await newPassword.save();
     // res.render("index", { email: verify.email, status: "verificado" });
-    res.status(201)
-
+    res.status(201);
   } catch (err) {
     res.json({ status: "Algo salio mal" });
     console.log(err);
