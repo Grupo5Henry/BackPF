@@ -33,7 +33,7 @@ router.get("/login/success", async (req, res) => {
         defaultShippingAddress: "from_google",
         billingAddress: "from_google",
         banned: false,
-        verified: false
+        verified: true,
       },
     });
     req.user.password = "";
@@ -43,9 +43,9 @@ router.get("/login/success", async (req, res) => {
       user: req.user,
       shipping: usuario[0].defaultShippingAddress,
       role: usuario[0].role,
-      billingAddress:usuario[0].billingAddress,
+      billingAddress: usuario[0].billingAddress,
       verified: usuario[0].verified,
-      mute: usuario[0].mute
+      mute: usuario[0].mute,
 
       /* cookies: req.cookies */
     });
