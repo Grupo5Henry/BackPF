@@ -2,11 +2,11 @@
 
 const BACK_URL = "https://backpf-production.up.railway.app";
 
-const FRONT_URL = "http://localhost:3001";
-// const FRONT_URL = "https://front-wheat-gamma.vercel.app";
-// const CORS_URL = "https://front-wheat-gamma.vercel.app"; //si usamos un wildcard ('*') deja de funcionar la autenticación via Google, pero la local sigue funcionando.
+// const FRONT_URL = "http://localhost:3001";
+const FRONT_URL = "https://front-wheat-gamma.vercel.app";
+const CORS_URL = "https://front-wheat-gamma.vercel.app"; //si usamos un wildcard ('*') deja de funcionar la autenticación via Google, pero la local sigue funcionando.
 
-const CORS_URL = "*";
+// const CORS_URL = "*";
 //const CORS_URL = "http://localhost:3000";
 
 // const CORS_URL = "*";
