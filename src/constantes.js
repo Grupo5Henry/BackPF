@@ -1,6 +1,6 @@
 // const BACK_URL = 'http://localhost:3000';
 
-const BACK_URL = "https://backpf-production.up.railway.app";
+const BACK_URL = "https://back-pf.vercel.app";
 
 // const FRONT_URL = "http://localhost:3000";
 const FRONT_URL = "https://front-wheat-gamma.vercel.app";
